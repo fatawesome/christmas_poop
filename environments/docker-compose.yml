@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  shellshock:
+    build: ./shellshock/
+    ports:
+      - "3002:22"
+    restart: always
+  sudo_lpe:
+    build: ./sudo_lpe/
+    ports:
+      - "3001:22"
+    restart: always
