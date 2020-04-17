@@ -11,3 +11,8 @@ services:
     ports:
       - "3001:22"
     restart: always
+  npm-programatic:
+    build: ./npm-programatic/
+    ports:
+      - "3003:3003"
+    restart: always
