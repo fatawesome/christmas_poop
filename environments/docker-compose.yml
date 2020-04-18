@@ -16,3 +16,8 @@ services:
     ports:
       - "3003:3003"
     restart: always
+  lodas:
+    build: ./lodas/
+    ports:
+      - "3004:3004"
+    restart: always
