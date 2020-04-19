@@ -30985,23 +30985,20 @@ function () {
         },
         youCanOnlyUploadX: {
           0: 'You can only upload %{smart_count} file',
-          1: 'You can only upload %{smart_count} files'
+          1: 'You can only upload %{smart_count} files',
+          2: 'You can only upload %{smart_count} files'
         },
         youHaveToAtLeastSelectX: {
           0: 'You have to select at least %{smart_count} file',
-          1: 'You have to select at least %{smart_count} files'
+          1: 'You have to select at least %{smart_count} files',
+          2: 'You have to select at least %{smart_count} files'
         },
-        // The default `exceedsSize2` string only combines the `exceedsSize` string (%{backwardsCompat}) with the size.
-        // Locales can override `exceedsSize2` to specify a different word order. This is for backwards compat with
-        // Uppy 1.9.x and below which did a naive concatenation of `exceedsSize2 + size` instead of using a locale-specific
-        // substitution.
-        // TODO: In 2.0 `exceedsSize2` should be removed in and `exceedsSize` updated to use substitution.
-        exceedsSize2: '%{backwardsCompat} %{size}',
         exceedsSize: 'This file exceeds maximum allowed size of',
         youCanOnlyUploadFileTypes: 'You can only upload: %{types}',
         noNewAlreadyUploading: 'Cannot add new files: already uploading',
         noDuplicates: 'Cannot add the duplicate file \'%{fileName}\', it already exists',
         companionError: 'Connection with Companion failed',
+        companionAuthError: 'Authorization required',
         companionUnauthorizeHint: 'To unauthorize to your %{provider} account, please go to %{url}',
         failedToUpload: 'Failed to upload %{file}',
         noInternetConnection: 'No Internet connection',
@@ -31010,7 +31007,8 @@ function () {
         noFilesFound: 'You have no files or folders here',
         selectX: {
           0: 'Select %{smart_count}',
-          1: 'Select %{smart_count}'
+          1: 'Select %{smart_count}',
+          2: 'Select %{smart_count}'
         },
         selectAllFilesFromFolderNamed: 'Select all files from folder %{name}',
         unselectAllFilesFromFolderNamed: 'Unselect all files from folder %{name}',
@@ -31027,7 +31025,8 @@ function () {
         emptyFolderAdded: 'No files were added from empty folder',
         folderAdded: {
           0: 'Added %{smart_count} file from %{folder}',
-          1: 'Added %{smart_count} files from %{folder}'
+          1: 'Added %{smart_count} files from %{folder}',
+          2: 'Added %{smart_count} files from %{folder}'
         }
       }
     };
@@ -31138,19 +31137,8 @@ function () {
       window[this.opts.id] = this;
     }
 
-    this._addListeners(); // Re-enable if we’ll need some capabilities on boot, like isMobileDevice
-    // this._setCapabilities()
-
-  } // _setCapabilities = () => {
-  //   const capabilities = {
-  //     isMobileDevice: isMobileDevice()
-  //   }
-  //   this.setState({
-  //     ...this.getState().capabilities,
-  //     capabilities
-  //   })
-  // }
-
+    this._addListeners();
+  }
 
   var _proto = Uppy.prototype;
 
@@ -31427,10 +31415,7 @@ function () {
 
     if (maxFileSize && file.data.size != null) {
       if (file.data.size > maxFileSize) {
-        throw new RestrictionError(this.i18n('exceedsSize2', {
-          backwardsCompat: this.i18n('exceedsSize'),
-          size: prettyBytes(maxFileSize)
-        }));
+        throw new RestrictionError(this.i18n('exceedsSize') + " " + prettyBytes(maxFileSize));
       }
     }
   }
@@ -31676,9 +31661,7 @@ function () {
       });
     }
 
-    if (newFiles.length > 0) {
-      this._startIfAutoProceed();
-    }
+    this._startIfAutoProceed();
 
     if (errors.length > 0) {
       var message = 'Multiple errors occurred while adding files:\n';
@@ -31910,7 +31893,7 @@ function () {
     // multiplied by 100 and the summ of individual progress of each file
     var files = this.getFiles();
     var inProgress = files.filter(function (file) {
-      return file.progress.uploadStarted || file.progress.preprocess || file.progress.postprocess;
+      return file.progress.uploadStarted;
     });
 
     if (inProgress.length === 0) {
@@ -32666,7 +32649,7 @@ function () {
   return Uppy;
 }();
 
-Uppy.VERSION = "1.10.2";
+Uppy.VERSION = "1.8.1";
 
 module.exports = function (opts) {
   return new Uppy(opts);
@@ -32676,7 +32659,4215 @@ module.exports = function (opts) {
 module.exports.Uppy = Uppy;
 module.exports.Plugin = Plugin;
 module.exports.debugLogger = debugLogger;
-},{"@uppy/utils/lib/Translator":"../node_modules/@uppy/utils/lib/Translator.js","namespace-emitter":"../node_modules/namespace-emitter/index.js","cuid":"../node_modules/cuid/index.js","lodash.throttle":"../node_modules/lodash.throttle/index.js","@uppy/utils/lib/prettyBytes":"../node_modules/@uppy/utils/lib/prettyBytes.js","mime-match":"../node_modules/mime-match/index.js","@uppy/store-default":"../node_modules/@uppy/store-default/lib/index.js","@uppy/utils/lib/getFileType":"../node_modules/@uppy/utils/lib/getFileType.js","@uppy/utils/lib/getFileNameAndExtension":"../node_modules/@uppy/utils/lib/getFileNameAndExtension.js","@uppy/utils/lib/generateFileID":"../node_modules/@uppy/utils/lib/generateFileID.js","./supportsUploadProgress":"../node_modules/@uppy/core/lib/supportsUploadProgress.js","./loggers":"../node_modules/@uppy/core/lib/loggers.js","./Plugin":"../node_modules/@uppy/core/lib/Plugin.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
+},{"@uppy/utils/lib/Translator":"../node_modules/@uppy/utils/lib/Translator.js","namespace-emitter":"../node_modules/namespace-emitter/index.js","cuid":"../node_modules/cuid/index.js","lodash.throttle":"../node_modules/lodash.throttle/index.js","@uppy/utils/lib/prettyBytes":"../node_modules/@uppy/utils/lib/prettyBytes.js","mime-match":"../node_modules/mime-match/index.js","@uppy/store-default":"../node_modules/@uppy/store-default/lib/index.js","@uppy/utils/lib/getFileType":"../node_modules/@uppy/utils/lib/getFileType.js","@uppy/utils/lib/getFileNameAndExtension":"../node_modules/@uppy/utils/lib/getFileNameAndExtension.js","@uppy/utils/lib/generateFileID":"../node_modules/@uppy/utils/lib/generateFileID.js","./supportsUploadProgress":"../node_modules/@uppy/core/lib/supportsUploadProgress.js","./loggers":"../node_modules/@uppy/core/lib/loggers.js","./Plugin":"../node_modules/@uppy/core/lib/Plugin.js"}],"../node_modules/tus-js-client/lib.es5/error.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DetailedError = function (_Error) {
+  _inherits(DetailedError, _Error);
+
+  function DetailedError(error) {
+    var causingErr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var xhr = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    _classCallCheck(this, DetailedError);
+
+    var _this = _possibleConstructorReturn(this, (DetailedError.__proto__ || Object.getPrototypeOf(DetailedError)).call(this, error.message));
+
+    _this.originalRequest = xhr;
+    _this.causingError = causingErr;
+
+    var message = error.message;
+    if (causingErr != null) {
+      message += ", caused by " + causingErr.toString();
+    }
+    if (xhr != null) {
+      message += ", originated from request (response code: " + xhr.status + ", response text: " + xhr.responseText + ")";
+    }
+    _this.message = message;
+    return _this;
+  }
+
+  return DetailedError;
+}(Error);
+
+exports.default = DetailedError;
+},{}],"../node_modules/extend/index.js":[function(require,module,exports) {
+'use strict';
+
+var hasOwn = Object.prototype.hasOwnProperty;
+var toStr = Object.prototype.toString;
+var defineProperty = Object.defineProperty;
+var gOPD = Object.getOwnPropertyDescriptor;
+
+var isArray = function isArray(arr) {
+	if (typeof Array.isArray === 'function') {
+		return Array.isArray(arr);
+	}
+
+	return toStr.call(arr) === '[object Array]';
+};
+
+var isPlainObject = function isPlainObject(obj) {
+	if (!obj || toStr.call(obj) !== '[object Object]') {
+		return false;
+	}
+
+	var hasOwnConstructor = hasOwn.call(obj, 'constructor');
+	var hasIsPrototypeOf = obj.constructor && obj.constructor.prototype && hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
+	// Not own constructor property must be Object
+	if (obj.constructor && !hasOwnConstructor && !hasIsPrototypeOf) {
+		return false;
+	}
+
+	// Own properties are enumerated firstly, so to speed up,
+	// if last one is own, then all properties are own.
+	var key;
+	for (key in obj) { /**/ }
+
+	return typeof key === 'undefined' || hasOwn.call(obj, key);
+};
+
+// If name is '__proto__', and Object.defineProperty is available, define __proto__ as an own property on target
+var setProperty = function setProperty(target, options) {
+	if (defineProperty && options.name === '__proto__') {
+		defineProperty(target, options.name, {
+			enumerable: true,
+			configurable: true,
+			value: options.newValue,
+			writable: true
+		});
+	} else {
+		target[options.name] = options.newValue;
+	}
+};
+
+// Return undefined instead of __proto__ if '__proto__' is not an own property
+var getProperty = function getProperty(obj, name) {
+	if (name === '__proto__') {
+		if (!hasOwn.call(obj, name)) {
+			return void 0;
+		} else if (gOPD) {
+			// In early versions of node, obj['__proto__'] is buggy when obj has
+			// __proto__ as an own property. Object.getOwnPropertyDescriptor() works.
+			return gOPD(obj, name).value;
+		}
+	}
+
+	return obj[name];
+};
+
+module.exports = function extend() {
+	var options, name, src, copy, copyIsArray, clone;
+	var target = arguments[0];
+	var i = 1;
+	var length = arguments.length;
+	var deep = false;
+
+	// Handle a deep copy situation
+	if (typeof target === 'boolean') {
+		deep = target;
+		target = arguments[1] || {};
+		// skip the boolean and the target
+		i = 2;
+	}
+	if (target == null || (typeof target !== 'object' && typeof target !== 'function')) {
+		target = {};
+	}
+
+	for (; i < length; ++i) {
+		options = arguments[i];
+		// Only deal with non-null/undefined values
+		if (options != null) {
+			// Extend the base object
+			for (name in options) {
+				src = getProperty(target, name);
+				copy = getProperty(options, name);
+
+				// Prevent never-ending loop
+				if (target !== copy) {
+					// Recurse if we're merging plain objects or arrays
+					if (deep && copy && (isPlainObject(copy) || (copyIsArray = isArray(copy)))) {
+						if (copyIsArray) {
+							copyIsArray = false;
+							clone = src && isArray(src) ? src : [];
+						} else {
+							clone = src && isPlainObject(src) ? src : {};
+						}
+
+						// Never move original objects, clone them
+						setProperty(target, { name: name, newValue: extend(deep, clone, copy) });
+
+					// Don't bring in undefined values
+					} else if (typeof copy !== 'undefined') {
+						setProperty(target, { name: name, newValue: copy });
+					}
+				}
+			}
+		}
+	}
+
+	// Return the modified object
+	return target;
+};
+
+},{}],"../node_modules/js-base64/base64.js":[function(require,module,exports) {
+var global = arguments[3];
+var define;
+/*
+ *  base64.js
+ *
+ *  Licensed under the BSD 3-Clause License.
+ *    http://opensource.org/licenses/BSD-3-Clause
+ *
+ *  References:
+ *    http://en.wikipedia.org/wiki/Base64
+ */
+;(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined'
+        ? module.exports = factory(global)
+        : typeof define === 'function' && define.amd
+        ? define(factory) : factory(global)
+}((
+    typeof self !== 'undefined' ? self
+        : typeof window !== 'undefined' ? window
+        : typeof global !== 'undefined' ? global
+: this
+), function(global) {
+    'use strict';
+    // existing version for noConflict()
+    global = global || {};
+    var _Base64 = global.Base64;
+    var version = "2.5.2";
+    // if node.js and NOT React Native, we use Buffer
+    var buffer;
+    if (typeof module !== 'undefined' && module.exports) {
+        try {
+            buffer = eval("require('buffer').Buffer");
+        } catch (err) {
+            buffer = undefined;
+        }
+    }
+    // constants
+    var b64chars
+        = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var b64tab = function(bin) {
+        var t = {};
+        for (var i = 0, l = bin.length; i < l; i++) t[bin.charAt(i)] = i;
+        return t;
+    }(b64chars);
+    var fromCharCode = String.fromCharCode;
+    // encoder stuff
+    var cb_utob = function(c) {
+        if (c.length < 2) {
+            var cc = c.charCodeAt(0);
+            return cc < 0x80 ? c
+                : cc < 0x800 ? (fromCharCode(0xc0 | (cc >>> 6))
+                                + fromCharCode(0x80 | (cc & 0x3f)))
+                : (fromCharCode(0xe0 | ((cc >>> 12) & 0x0f))
+                    + fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+                    + fromCharCode(0x80 | ( cc         & 0x3f)));
+        } else {
+            var cc = 0x10000
+                + (c.charCodeAt(0) - 0xD800) * 0x400
+                + (c.charCodeAt(1) - 0xDC00);
+            return (fromCharCode(0xf0 | ((cc >>> 18) & 0x07))
+                    + fromCharCode(0x80 | ((cc >>> 12) & 0x3f))
+                    + fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+                    + fromCharCode(0x80 | ( cc         & 0x3f)));
+        }
+    };
+    var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+    var utob = function(u) {
+        return u.replace(re_utob, cb_utob);
+    };
+    var cb_encode = function(ccc) {
+        var padlen = [0, 2, 1][ccc.length % 3],
+        ord = ccc.charCodeAt(0) << 16
+            | ((ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8)
+            | ((ccc.length > 2 ? ccc.charCodeAt(2) : 0)),
+        chars = [
+            b64chars.charAt( ord >>> 18),
+            b64chars.charAt((ord >>> 12) & 63),
+            padlen >= 2 ? '=' : b64chars.charAt((ord >>> 6) & 63),
+            padlen >= 1 ? '=' : b64chars.charAt(ord & 63)
+        ];
+        return chars.join('');
+    };
+    var btoa = global.btoa ? function(b) {
+        return global.btoa(b);
+    } : function(b) {
+        return b.replace(/[\s\S]{1,3}/g, cb_encode);
+    };
+    var _encode = function(u) {
+        var isUint8Array = Object.prototype.toString.call(u) === '[object Uint8Array]';
+        return isUint8Array ? u.toString('base64')
+            : btoa(utob(String(u)));
+    }
+    var encode = function(u, urisafe) {
+        return !urisafe
+            ? _encode(u)
+            : _encode(String(u)).replace(/[+\/]/g, function(m0) {
+                return m0 == '+' ? '-' : '_';
+            }).replace(/=/g, '');
+    };
+    var encodeURI = function(u) { return encode(u, true) };
+    // decoder stuff
+    var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+    var cb_btou = function(cccc) {
+        switch(cccc.length) {
+        case 4:
+            var cp = ((0x07 & cccc.charCodeAt(0)) << 18)
+                |    ((0x3f & cccc.charCodeAt(1)) << 12)
+                |    ((0x3f & cccc.charCodeAt(2)) <<  6)
+                |     (0x3f & cccc.charCodeAt(3)),
+            offset = cp - 0x10000;
+            return (fromCharCode((offset  >>> 10) + 0xD800)
+                    + fromCharCode((offset & 0x3FF) + 0xDC00));
+        case 3:
+            return fromCharCode(
+                ((0x0f & cccc.charCodeAt(0)) << 12)
+                    | ((0x3f & cccc.charCodeAt(1)) << 6)
+                    |  (0x3f & cccc.charCodeAt(2))
+            );
+        default:
+            return  fromCharCode(
+                ((0x1f & cccc.charCodeAt(0)) << 6)
+                    |  (0x3f & cccc.charCodeAt(1))
+            );
+        }
+    };
+    var btou = function(b) {
+        return b.replace(re_btou, cb_btou);
+    };
+    var cb_decode = function(cccc) {
+        var len = cccc.length,
+        padlen = len % 4,
+        n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0)
+            | (len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0)
+            | (len > 2 ? b64tab[cccc.charAt(2)] <<  6 : 0)
+            | (len > 3 ? b64tab[cccc.charAt(3)]       : 0),
+        chars = [
+            fromCharCode( n >>> 16),
+            fromCharCode((n >>>  8) & 0xff),
+            fromCharCode( n         & 0xff)
+        ];
+        chars.length -= [0, 0, 2, 1][padlen];
+        return chars.join('');
+    };
+    var _atob = global.atob ? function(a) {
+        return global.atob(a);
+    } : function(a){
+        return a.replace(/\S{1,4}/g, cb_decode);
+    };
+    var atob = function(a) {
+        return _atob(String(a).replace(/[^A-Za-z0-9\+\/]/g, ''));
+    };
+    var _decode = buffer ?
+        buffer.from && Uint8Array && buffer.from !== Uint8Array.from
+        ? function(a) {
+            return (a.constructor === buffer.constructor
+                    ? a : buffer.from(a, 'base64')).toString();
+        }
+        : function(a) {
+            return (a.constructor === buffer.constructor
+                    ? a : new buffer(a, 'base64')).toString();
+        }
+        : function(a) { return btou(_atob(a)) };
+    var decode = function(a){
+        return _decode(
+            String(a).replace(/[-_]/g, function(m0) { return m0 == '-' ? '+' : '/' })
+                .replace(/[^A-Za-z0-9\+\/]/g, '')
+        );
+    };
+    var noConflict = function() {
+        var Base64 = global.Base64;
+        global.Base64 = _Base64;
+        return Base64;
+    };
+    // export Base64
+    global.Base64 = {
+        VERSION: version,
+        atob: atob,
+        btoa: btoa,
+        fromBase64: decode,
+        toBase64: encode,
+        utob: utob,
+        encode: encode,
+        encodeURI: encodeURI,
+        btou: btou,
+        decode: decode,
+        noConflict: noConflict,
+        __buffer__: buffer
+    };
+    // if ES5 is available, make Base64.extendString() available
+    if (typeof Object.defineProperty === 'function') {
+        var noEnum = function(v){
+            return {value:v,enumerable:false,writable:true,configurable:true};
+        };
+        global.Base64.extendString = function () {
+            Object.defineProperty(
+                String.prototype, 'fromBase64', noEnum(function () {
+                    return decode(this)
+                }));
+            Object.defineProperty(
+                String.prototype, 'toBase64', noEnum(function (urisafe) {
+                    return encode(this, urisafe)
+                }));
+            Object.defineProperty(
+                String.prototype, 'toBase64URI', noEnum(function () {
+                    return encode(this, true)
+                }));
+        };
+    }
+    //
+    // export Base64 to the namespace
+    //
+    if (global['Meteor']) { // Meteor.js
+        Base64 = global.Base64;
+    }
+    // module.exports and AMD are mutually exclusive.
+    // module.exports has precedence.
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports.Base64 = global.Base64;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define([], function(){ return global.Base64 });
+    }
+    // that's it!
+    return {Base64: global.Base64}
+}));
+
+
+},{}],"../node_modules/requires-port/index.js":[function(require,module,exports) {
+'use strict';
+
+/**
+ * Check if we're required to add a port number.
+ *
+ * @see https://url.spec.whatwg.org/#default-port
+ * @param {Number|String} port Port number we need to check
+ * @param {String} protocol Protocol we need to check against.
+ * @returns {Boolean} Is it a default port for the given protocol
+ * @api private
+ */
+module.exports = function required(port, protocol) {
+  protocol = protocol.split(':')[0];
+  port = +port;
+
+  if (!port) return false;
+
+  switch (protocol) {
+    case 'http':
+    case 'ws':
+    return port !== 80;
+
+    case 'https':
+    case 'wss':
+    return port !== 443;
+
+    case 'ftp':
+    return port !== 21;
+
+    case 'gopher':
+    return port !== 70;
+
+    case 'file':
+    return false;
+  }
+
+  return port !== 0;
+};
+
+},{}],"../node_modules/querystringify/index.js":[function(require,module,exports) {
+'use strict';
+
+var has = Object.prototype.hasOwnProperty
+  , undef;
+
+/**
+ * Decode a URI encoded string.
+ *
+ * @param {String} input The URI encoded string.
+ * @returns {String|Null} The decoded string.
+ * @api private
+ */
+function decode(input) {
+  try {
+    return decodeURIComponent(input.replace(/\+/g, ' '));
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Attempts to encode a given input.
+ *
+ * @param {String} input The string that needs to be encoded.
+ * @returns {String|Null} The encoded string.
+ * @api private
+ */
+function encode(input) {
+  try {
+    return encodeURIComponent(input);
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Simple query string parser.
+ *
+ * @param {String} query The query string that needs to be parsed.
+ * @returns {Object}
+ * @api public
+ */
+function querystring(query) {
+  var parser = /([^=?&]+)=?([^&]*)/g
+    , result = {}
+    , part;
+
+  while (part = parser.exec(query)) {
+    var key = decode(part[1])
+      , value = decode(part[2]);
+
+    //
+    // Prevent overriding of existing properties. This ensures that build-in
+    // methods like `toString` or __proto__ are not overriden by malicious
+    // querystrings.
+    //
+    // In the case if failed decoding, we want to omit the key/value pairs
+    // from the result.
+    //
+    if (key === null || value === null || key in result) continue;
+    result[key] = value;
+  }
+
+  return result;
+}
+
+/**
+ * Transform a query string to an object.
+ *
+ * @param {Object} obj Object that should be transformed.
+ * @param {String} prefix Optional prefix.
+ * @returns {String}
+ * @api public
+ */
+function querystringify(obj, prefix) {
+  prefix = prefix || '';
+
+  var pairs = []
+    , value
+    , key;
+
+  //
+  // Optionally prefix with a '?' if needed
+  //
+  if ('string' !== typeof prefix) prefix = '?';
+
+  for (key in obj) {
+    if (has.call(obj, key)) {
+      value = obj[key];
+
+      //
+      // Edge cases where we actually want to encode the value to an empty
+      // string instead of the stringified value.
+      //
+      if (!value && (value === null || value === undef || isNaN(value))) {
+        value = '';
+      }
+
+      key = encodeURIComponent(key);
+      value = encodeURIComponent(value);
+
+      //
+      // If we failed to encode the strings, we should bail out as we don't
+      // want to add invalid strings to the query.
+      //
+      if (key === null || value === null) continue;
+      pairs.push(key +'='+ value);
+    }
+  }
+
+  return pairs.length ? prefix + pairs.join('&') : '';
+}
+
+//
+// Expose the module.
+//
+exports.stringify = querystringify;
+exports.parse = querystring;
+
+},{}],"../node_modules/url-parse/index.js":[function(require,module,exports) {
+var global = arguments[3];
+'use strict';
+
+var required = require('requires-port')
+  , qs = require('querystringify')
+  , slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//
+  , protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i
+  , whitespace = '[\\x09\\x0A\\x0B\\x0C\\x0D\\x20\\xA0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029\\uFEFF]'
+  , left = new RegExp('^'+ whitespace +'+');
+
+/**
+ * Trim a given string.
+ *
+ * @param {String} str String to trim.
+ * @public
+ */
+function trimLeft(str) {
+  return (str ? str : '').toString().replace(left, '');
+}
+
+/**
+ * These are the parse rules for the URL parser, it informs the parser
+ * about:
+ *
+ * 0. The char it Needs to parse, if it's a string it should be done using
+ *    indexOf, RegExp using exec and NaN means set as current value.
+ * 1. The property we should set when parsing this value.
+ * 2. Indication if it's backwards or forward parsing, when set as number it's
+ *    the value of extra chars that should be split off.
+ * 3. Inherit from location if non existing in the parser.
+ * 4. `toLowerCase` the resulting value.
+ */
+var rules = [
+  ['#', 'hash'],                        // Extract from the back.
+  ['?', 'query'],                       // Extract from the back.
+  function sanitize(address) {          // Sanitize what is left of the address
+    return address.replace('\\', '/');
+  },
+  ['/', 'pathname'],                    // Extract from the back.
+  ['@', 'auth', 1],                     // Extract from the front.
+  [NaN, 'host', undefined, 1, 1],       // Set left over value.
+  [/:(\d+)$/, 'port', undefined, 1],    // RegExp the back.
+  [NaN, 'hostname', undefined, 1, 1]    // Set left over.
+];
+
+/**
+ * These properties should not be copied or inherited from. This is only needed
+ * for all non blob URL's as a blob URL does not include a hash, only the
+ * origin.
+ *
+ * @type {Object}
+ * @private
+ */
+var ignore = { hash: 1, query: 1 };
+
+/**
+ * The location object differs when your code is loaded through a normal page,
+ * Worker or through a worker using a blob. And with the blobble begins the
+ * trouble as the location object will contain the URL of the blob, not the
+ * location of the page where our code is loaded in. The actual origin is
+ * encoded in the `pathname` so we can thankfully generate a good "default"
+ * location from it so we can generate proper relative URL's again.
+ *
+ * @param {Object|String} loc Optional default location object.
+ * @returns {Object} lolcation object.
+ * @public
+ */
+function lolcation(loc) {
+  var globalVar;
+
+  if (typeof window !== 'undefined') globalVar = window;
+  else if (typeof global !== 'undefined') globalVar = global;
+  else if (typeof self !== 'undefined') globalVar = self;
+  else globalVar = {};
+
+  var location = globalVar.location || {};
+  loc = loc || location;
+
+  var finaldestination = {}
+    , type = typeof loc
+    , key;
+
+  if ('blob:' === loc.protocol) {
+    finaldestination = new Url(unescape(loc.pathname), {});
+  } else if ('string' === type) {
+    finaldestination = new Url(loc, {});
+    for (key in ignore) delete finaldestination[key];
+  } else if ('object' === type) {
+    for (key in loc) {
+      if (key in ignore) continue;
+      finaldestination[key] = loc[key];
+    }
+
+    if (finaldestination.slashes === undefined) {
+      finaldestination.slashes = slashes.test(loc.href);
+    }
+  }
+
+  return finaldestination;
+}
+
+/**
+ * @typedef ProtocolExtract
+ * @type Object
+ * @property {String} protocol Protocol matched in the URL, in lowercase.
+ * @property {Boolean} slashes `true` if protocol is followed by "//", else `false`.
+ * @property {String} rest Rest of the URL that is not part of the protocol.
+ */
+
+/**
+ * Extract protocol information from a URL with/without double slash ("//").
+ *
+ * @param {String} address URL we want to extract from.
+ * @return {ProtocolExtract} Extracted information.
+ * @private
+ */
+function extractProtocol(address) {
+  address = trimLeft(address);
+  var match = protocolre.exec(address);
+
+  return {
+    protocol: match[1] ? match[1].toLowerCase() : '',
+    slashes: !!match[2],
+    rest: match[3]
+  };
+}
+
+/**
+ * Resolve a relative URL pathname against a base URL pathname.
+ *
+ * @param {String} relative Pathname of the relative URL.
+ * @param {String} base Pathname of the base URL.
+ * @return {String} Resolved pathname.
+ * @private
+ */
+function resolve(relative, base) {
+  if (relative === '') return base;
+
+  var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/'))
+    , i = path.length
+    , last = path[i - 1]
+    , unshift = false
+    , up = 0;
+
+  while (i--) {
+    if (path[i] === '.') {
+      path.splice(i, 1);
+    } else if (path[i] === '..') {
+      path.splice(i, 1);
+      up++;
+    } else if (up) {
+      if (i === 0) unshift = true;
+      path.splice(i, 1);
+      up--;
+    }
+  }
+
+  if (unshift) path.unshift('');
+  if (last === '.' || last === '..') path.push('');
+
+  return path.join('/');
+}
+
+/**
+ * The actual URL instance. Instead of returning an object we've opted-in to
+ * create an actual constructor as it's much more memory efficient and
+ * faster and it pleases my OCD.
+ *
+ * It is worth noting that we should not use `URL` as class name to prevent
+ * clashes with the global URL instance that got introduced in browsers.
+ *
+ * @constructor
+ * @param {String} address URL we want to parse.
+ * @param {Object|String} [location] Location defaults for relative paths.
+ * @param {Boolean|Function} [parser] Parser for the query string.
+ * @private
+ */
+function Url(address, location, parser) {
+  address = trimLeft(address);
+
+  if (!(this instanceof Url)) {
+    return new Url(address, location, parser);
+  }
+
+  var relative, extracted, parse, instruction, index, key
+    , instructions = rules.slice()
+    , type = typeof location
+    , url = this
+    , i = 0;
+
+  //
+  // The following if statements allows this module two have compatibility with
+  // 2 different API:
+  //
+  // 1. Node.js's `url.parse` api which accepts a URL, boolean as arguments
+  //    where the boolean indicates that the query string should also be parsed.
+  //
+  // 2. The `URL` interface of the browser which accepts a URL, object as
+  //    arguments. The supplied object will be used as default values / fall-back
+  //    for relative paths.
+  //
+  if ('object' !== type && 'string' !== type) {
+    parser = location;
+    location = null;
+  }
+
+  if (parser && 'function' !== typeof parser) parser = qs.parse;
+
+  location = lolcation(location);
+
+  //
+  // Extract protocol information before running the instructions.
+  //
+  extracted = extractProtocol(address || '');
+  relative = !extracted.protocol && !extracted.slashes;
+  url.slashes = extracted.slashes || relative && location.slashes;
+  url.protocol = extracted.protocol || location.protocol || '';
+  address = extracted.rest;
+
+  //
+  // When the authority component is absent the URL starts with a path
+  // component.
+  //
+  if (!extracted.slashes) instructions[3] = [/(.*)/, 'pathname'];
+
+  for (; i < instructions.length; i++) {
+    instruction = instructions[i];
+
+    if (typeof instruction === 'function') {
+      address = instruction(address);
+      continue;
+    }
+
+    parse = instruction[0];
+    key = instruction[1];
+
+    if (parse !== parse) {
+      url[key] = address;
+    } else if ('string' === typeof parse) {
+      if (~(index = address.indexOf(parse))) {
+        if ('number' === typeof instruction[2]) {
+          url[key] = address.slice(0, index);
+          address = address.slice(index + instruction[2]);
+        } else {
+          url[key] = address.slice(index);
+          address = address.slice(0, index);
+        }
+      }
+    } else if ((index = parse.exec(address))) {
+      url[key] = index[1];
+      address = address.slice(0, index.index);
+    }
+
+    url[key] = url[key] || (
+      relative && instruction[3] ? location[key] || '' : ''
+    );
+
+    //
+    // Hostname, host and protocol should be lowercased so they can be used to
+    // create a proper `origin`.
+    //
+    if (instruction[4]) url[key] = url[key].toLowerCase();
+  }
+
+  //
+  // Also parse the supplied query string in to an object. If we're supplied
+  // with a custom parser as function use that instead of the default build-in
+  // parser.
+  //
+  if (parser) url.query = parser(url.query);
+
+  //
+  // If the URL is relative, resolve the pathname against the base URL.
+  //
+  if (
+      relative
+    && location.slashes
+    && url.pathname.charAt(0) !== '/'
+    && (url.pathname !== '' || location.pathname !== '')
+  ) {
+    url.pathname = resolve(url.pathname, location.pathname);
+  }
+
+  //
+  // We should not add port numbers if they are already the default port number
+  // for a given protocol. As the host also contains the port number we're going
+  // override it with the hostname which contains no port number.
+  //
+  if (!required(url.port, url.protocol)) {
+    url.host = url.hostname;
+    url.port = '';
+  }
+
+  //
+  // Parse down the `auth` for the username and password.
+  //
+  url.username = url.password = '';
+  if (url.auth) {
+    instruction = url.auth.split(':');
+    url.username = instruction[0] || '';
+    url.password = instruction[1] || '';
+  }
+
+  url.origin = url.protocol && url.host && url.protocol !== 'file:'
+    ? url.protocol +'//'+ url.host
+    : 'null';
+
+  //
+  // The href is just the compiled result.
+  //
+  url.href = url.toString();
+}
+
+/**
+ * This is convenience method for changing properties in the URL instance to
+ * insure that they all propagate correctly.
+ *
+ * @param {String} part          Property we need to adjust.
+ * @param {Mixed} value          The newly assigned value.
+ * @param {Boolean|Function} fn  When setting the query, it will be the function
+ *                               used to parse the query.
+ *                               When setting the protocol, double slash will be
+ *                               removed from the final url if it is true.
+ * @returns {URL} URL instance for chaining.
+ * @public
+ */
+function set(part, value, fn) {
+  var url = this;
+
+  switch (part) {
+    case 'query':
+      if ('string' === typeof value && value.length) {
+        value = (fn || qs.parse)(value);
+      }
+
+      url[part] = value;
+      break;
+
+    case 'port':
+      url[part] = value;
+
+      if (!required(value, url.protocol)) {
+        url.host = url.hostname;
+        url[part] = '';
+      } else if (value) {
+        url.host = url.hostname +':'+ value;
+      }
+
+      break;
+
+    case 'hostname':
+      url[part] = value;
+
+      if (url.port) value += ':'+ url.port;
+      url.host = value;
+      break;
+
+    case 'host':
+      url[part] = value;
+
+      if (/:\d+$/.test(value)) {
+        value = value.split(':');
+        url.port = value.pop();
+        url.hostname = value.join(':');
+      } else {
+        url.hostname = value;
+        url.port = '';
+      }
+
+      break;
+
+    case 'protocol':
+      url.protocol = value.toLowerCase();
+      url.slashes = !fn;
+      break;
+
+    case 'pathname':
+    case 'hash':
+      if (value) {
+        var char = part === 'pathname' ? '/' : '#';
+        url[part] = value.charAt(0) !== char ? char + value : value;
+      } else {
+        url[part] = value;
+      }
+      break;
+
+    default:
+      url[part] = value;
+  }
+
+  for (var i = 0; i < rules.length; i++) {
+    var ins = rules[i];
+
+    if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase();
+  }
+
+  url.origin = url.protocol && url.host && url.protocol !== 'file:'
+    ? url.protocol +'//'+ url.host
+    : 'null';
+
+  url.href = url.toString();
+
+  return url;
+}
+
+/**
+ * Transform the properties back in to a valid and full URL string.
+ *
+ * @param {Function} stringify Optional query stringify function.
+ * @returns {String} Compiled version of the URL.
+ * @public
+ */
+function toString(stringify) {
+  if (!stringify || 'function' !== typeof stringify) stringify = qs.stringify;
+
+  var query
+    , url = this
+    , protocol = url.protocol;
+
+  if (protocol && protocol.charAt(protocol.length - 1) !== ':') protocol += ':';
+
+  var result = protocol + (url.slashes ? '//' : '');
+
+  if (url.username) {
+    result += url.username;
+    if (url.password) result += ':'+ url.password;
+    result += '@';
+  }
+
+  result += url.host + url.pathname;
+
+  query = 'object' === typeof url.query ? stringify(url.query) : url.query;
+  if (query) result += '?' !== query.charAt(0) ? '?'+ query : query;
+
+  if (url.hash) result += url.hash;
+
+  return result;
+}
+
+Url.prototype = { set: set, toString: toString };
+
+//
+// Expose the URL parser and some additional properties that might be useful for
+// others or testing.
+//
+Url.extractProtocol = extractProtocol;
+Url.location = lolcation;
+Url.trimLeft = trimLeft;
+Url.qs = qs;
+
+module.exports = Url;
+
+},{"requires-port":"../node_modules/requires-port/index.js","querystringify":"../node_modules/querystringify/index.js"}],"../node_modules/tus-js-client/lib.es5/browser/request.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.newRequest = newRequest;
+exports.resolveUrl = resolveUrl;
+
+var _urlParse = require("url-parse");
+
+var _urlParse2 = _interopRequireDefault(_urlParse);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function newRequest() {
+  return new window.XMLHttpRequest();
+} /* global window */
+function resolveUrl(origin, link) {
+  return new _urlParse2.default(link, origin).toString();
+}
+},{"url-parse":"../node_modules/url-parse/index.js"}],"../node_modules/tus-js-client/lib.es5/browser/isReactNative.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isReactNative = function isReactNative() {
+  return typeof navigator !== "undefined" && typeof navigator.product === "string" && navigator.product.toLowerCase() === "reactnative";
+};
+
+exports.default = isReactNative;
+},{}],"../node_modules/tus-js-client/lib.es5/browser/uriToBlob.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * uriToBlob resolves a URI to a Blob object. This is used for
+ * React Native to retrieve a file (identified by a file://
+ * URI) as a blob.
+ */
+function uriToBlob(uri, done) {
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = "blob";
+  xhr.onload = function () {
+    var blob = xhr.response;
+    done(null, blob);
+  };
+  xhr.onerror = function (err) {
+    done(err);
+  };
+  xhr.open("GET", uri);
+  xhr.send();
+}
+
+exports.default = uriToBlob;
+},{}],"../node_modules/tus-js-client/lib.es5/browser/isCordova.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isCordova = function isCordova() {
+  return typeof window != "undefined" && (typeof window.PhoneGap != "undefined" || typeof window.Cordova != "undefined" || typeof window.cordova != "undefined");
+};
+
+exports.default = isCordova;
+},{}],"../node_modules/tus-js-client/lib.es5/browser/readAsByteArray.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * readAsByteArray converts a File object to a Uint8Array.
+ * This function is only used on the Apache Cordova platform.
+ * See https://cordova.apache.org/docs/en/latest/reference/cordova-plugin-file/index.html#read-a-file
+ */
+function readAsByteArray(chunk, callback) {
+  var reader = new FileReader();
+  reader.onload = function () {
+    callback(null, new Uint8Array(reader.result));
+  };
+  reader.onerror = function (err) {
+    callback(err);
+  };
+  reader.readAsArrayBuffer(chunk);
+}
+
+exports.default = readAsByteArray;
+},{}],"../node_modules/tus-js-client/lib.es5/browser/source.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.getSource = getSource;
+
+var _isReactNative = require("./isReactNative");
+
+var _isReactNative2 = _interopRequireDefault(_isReactNative);
+
+var _uriToBlob = require("./uriToBlob");
+
+var _uriToBlob2 = _interopRequireDefault(_uriToBlob);
+
+var _isCordova = require("./isCordova");
+
+var _isCordova2 = _interopRequireDefault(_isCordova);
+
+var _readAsByteArray = require("./readAsByteArray");
+
+var _readAsByteArray2 = _interopRequireDefault(_readAsByteArray);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var FileSource = function () {
+  function FileSource(file) {
+    _classCallCheck(this, FileSource);
+
+    this._file = file;
+    this.size = file.size;
+  }
+
+  _createClass(FileSource, [{
+    key: "slice",
+    value: function slice(start, end, callback) {
+      // In Apache Cordova applications, a File must be resolved using
+      // FileReader instances, see
+      // https://cordova.apache.org/docs/en/8.x/reference/cordova-plugin-file/index.html#read-a-file
+      if ((0, _isCordova2.default)()) {
+        (0, _readAsByteArray2.default)(this._file.slice(start, end), function (err, chunk) {
+          if (err) return callback(err);
+
+          callback(null, chunk);
+        });
+        return;
+      }
+
+      callback(null, this._file.slice(start, end));
+    }
+  }, {
+    key: "close",
+    value: function close() {}
+  }]);
+
+  return FileSource;
+}();
+
+var StreamSource = function () {
+  function StreamSource(reader, chunkSize) {
+    _classCallCheck(this, StreamSource);
+
+    this._chunkSize = chunkSize;
+    this._buffer = undefined;
+    this._bufferOffset = 0;
+    this._reader = reader;
+    this._done = false;
+  }
+
+  _createClass(StreamSource, [{
+    key: "slice",
+    value: function slice(start, end, callback) {
+      if (start < this._bufferOffset) {
+        callback(new Error("Requested data is before the reader's current offset"));
+        return;
+      }
+
+      return this._readUntilEnoughDataOrDone(start, end, callback);
+    }
+  }, {
+    key: "_readUntilEnoughDataOrDone",
+    value: function _readUntilEnoughDataOrDone(start, end, callback) {
+      var _this = this;
+
+      var hasEnoughData = end <= this._bufferOffset + len(this._buffer);
+      if (this._done || hasEnoughData) {
+        var value = this._getDataFromBuffer(start, end);
+        callback(null, value, value == null ? this._done : false);
+        return;
+      }
+      this._reader.read().then(function (_ref) {
+        var value = _ref.value,
+            done = _ref.done;
+
+        if (done) {
+          _this._done = true;
+        } else if (_this._buffer === undefined) {
+          _this._buffer = value;
+        } else {
+          _this._buffer = concat(_this._buffer, value);
+        }
+
+        _this._readUntilEnoughDataOrDone(start, end, callback);
+      }).catch(function (err) {
+        callback(new Error("Error during read: " + err));
+      });
+    }
+  }, {
+    key: "_getDataFromBuffer",
+    value: function _getDataFromBuffer(start, end) {
+      // Remove data from buffer before `start`.
+      // Data might be reread from the buffer if an upload fails, so we can only
+      // safely delete data when it comes *before* what is currently being read.
+      if (start > this._bufferOffset) {
+        this._buffer = this._buffer.slice(start - this._bufferOffset);
+        this._bufferOffset = start;
+      }
+      // If the buffer is empty after removing old data, all data has been read.
+      var hasAllDataBeenRead = len(this._buffer) === 0;
+      if (this._done && hasAllDataBeenRead) {
+        return null;
+      }
+      // We already removed data before `start`, so we just return the first
+      // chunk from the buffer.
+      return this._buffer.slice(0, end - start);
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      if (this._reader.cancel) {
+        this._reader.cancel();
+      }
+    }
+  }]);
+
+  return StreamSource;
+}();
+
+function len(blobOrArray) {
+  if (blobOrArray === undefined) return 0;
+  if (blobOrArray.size !== undefined) return blobOrArray.size;
+  return blobOrArray.length;
+}
+
+/*
+  Typed arrays and blobs don't have a concat method.
+  This function helps StreamSource accumulate data to reach chunkSize.
+*/
+function concat(a, b) {
+  if (a.concat) {
+    // Is `a` an Array?
+    return a.concat(b);
+  }
+  if (a instanceof Blob) {
+    return new Blob([a, b], { type: a.type });
+  }
+  if (a.set) {
+    // Is `a` a typed array?
+    var c = new a.constructor(a.length + b.length);
+    c.set(a);
+    c.set(b, a.length);
+    return c;
+  }
+  throw new Error("Unknown data type");
+}
+
+function getSource(input, chunkSize, callback) {
+  // In React Native, when user selects a file, instead of a File or Blob,
+  // you usually get a file object {} with a uri property that contains
+  // a local path to the file. We use XMLHttpRequest to fetch
+  // the file blob, before uploading with tus.
+  if ((0, _isReactNative2.default)() && input && typeof input.uri !== "undefined") {
+    (0, _uriToBlob2.default)(input.uri, function (err, blob) {
+      if (err) {
+        return callback(new Error("tus: cannot fetch `file.uri` as Blob, make sure the uri is correct and accessible. " + err));
+      }
+      callback(null, new FileSource(blob));
+    });
+    return;
+  }
+
+  // Since we emulate the Blob type in our tests (not all target browsers
+  // support it), we cannot use `instanceof` for testing whether the input value
+  // can be handled. Instead, we simply check is the slice() function and the
+  // size property are available.
+  if (typeof input.slice === "function" && typeof input.size !== "undefined") {
+    callback(null, new FileSource(input));
+    return;
+  }
+
+  if (typeof input.read === "function") {
+    chunkSize = +chunkSize;
+    if (!isFinite(chunkSize)) {
+      callback(new Error("cannot create source for stream without a finite value for the `chunkSize` option"));
+      return;
+    }
+    callback(null, new StreamSource(input, chunkSize));
+    return;
+  }
+
+  callback(new Error("source object may only be an instance of File, Blob, or Reader in this environment"));
+}
+},{"./isReactNative":"../node_modules/tus-js-client/lib.es5/browser/isReactNative.js","./uriToBlob":"../node_modules/tus-js-client/lib.es5/browser/uriToBlob.js","./isCordova":"../node_modules/tus-js-client/lib.es5/browser/isCordova.js","./readAsByteArray":"../node_modules/tus-js-client/lib.es5/browser/readAsByteArray.js"}],"../node_modules/tus-js-client/lib.es5/browser/storage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.getStorage = getStorage;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/* global window, localStorage */
+
+var hasStorage = false;
+try {
+  hasStorage = "localStorage" in window;
+
+  // Attempt to store and read entries from the local storage to detect Private
+  // Mode on Safari on iOS (see #49)
+  var key = "tusSupport";
+  localStorage.setItem(key, localStorage.getItem(key));
+} catch (e) {
+  // If we try to access localStorage inside a sandboxed iframe, a SecurityError
+  // is thrown. When in private mode on iOS Safari, a QuotaExceededError is
+  // thrown (see #49)
+  if (e.code === e.SECURITY_ERR || e.code === e.QUOTA_EXCEEDED_ERR) {
+    hasStorage = false;
+  } else {
+    throw e;
+  }
+}
+
+var canStoreURLs = exports.canStoreURLs = hasStorage;
+
+var LocalStorage = function () {
+  function LocalStorage() {
+    _classCallCheck(this, LocalStorage);
+  }
+
+  _createClass(LocalStorage, [{
+    key: "setItem",
+    value: function setItem(key, value, cb) {
+      cb(null, localStorage.setItem(key, value));
+    }
+  }, {
+    key: "getItem",
+    value: function getItem(key, cb) {
+      cb(null, localStorage.getItem(key));
+    }
+  }, {
+    key: "removeItem",
+    value: function removeItem(key, cb) {
+      cb(null, localStorage.removeItem(key));
+    }
+  }]);
+
+  return LocalStorage;
+}();
+
+function getStorage() {
+  return hasStorage ? new LocalStorage() : null;
+}
+},{}],"../node_modules/tus-js-client/lib.es5/browser/fingerprint.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = fingerprint;
+
+var _isReactNative = require("./isReactNative");
+
+var _isReactNative2 = _interopRequireDefault(_isReactNative);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Generate a fingerprint for a file which will be used the store the endpoint
+ *
+ * @param {File} file
+ * @param {Object} options
+ * @param {Function} callback
+ */
+function fingerprint(file, options, callback) {
+  if ((0, _isReactNative2.default)()) {
+    return callback(null, reactNativeFingerprint(file, options));
+  }
+
+  return callback(null, ["tus-br", file.name, file.type, file.size, file.lastModified, options.endpoint].join("-"));
+}
+
+function reactNativeFingerprint(file, options) {
+  var exifHash = file.exif ? hashCode(JSON.stringify(file.exif)) : "noexif";
+  return ["tus-rn", file.name || "noname", file.size || "nosize", exifHash, options.endpoint].join("/");
+}
+
+function hashCode(str) {
+  // from https://stackoverflow.com/a/8831937/151666
+  var hash = 0;
+  if (str.length === 0) {
+    return hash;
+  }
+  for (var i = 0; i < str.length; i++) {
+    var char = str.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
+},{"./isReactNative":"../node_modules/tus-js-client/lib.es5/browser/isReactNative.js"}],"../node_modules/tus-js-client/lib.es5/upload.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global window */
+
+
+// We import the files used inside the Node environment which are rewritten
+// for browsers using the rules defined in the package.json
+
+
+var _error = require("./error");
+
+var _error2 = _interopRequireDefault(_error);
+
+var _extend = require("extend");
+
+var _extend2 = _interopRequireDefault(_extend);
+
+var _jsBase = require("js-base64");
+
+var _request = require("./node/request");
+
+var _source = require("./node/source");
+
+var _storage = require("./node/storage");
+
+var _fingerprint = require("./node/fingerprint");
+
+var _fingerprint2 = _interopRequireDefault(_fingerprint);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var defaultOptions = {
+  endpoint: null,
+  fingerprint: _fingerprint2.default,
+  resume: true,
+  onProgress: null,
+  onChunkComplete: null,
+  onSuccess: null,
+  onError: null,
+  headers: {},
+  chunkSize: Infinity,
+  withCredentials: false,
+  uploadUrl: null,
+  uploadSize: null,
+  overridePatchMethod: false,
+  retryDelays: null,
+  removeFingerprintOnSuccess: false,
+  uploadLengthDeferred: false,
+  urlStorage: null,
+  fileReader: null,
+  uploadDataDuringCreation: false
+};
+
+var Upload = function () {
+  function Upload(file, options) {
+    _classCallCheck(this, Upload);
+
+    this.options = (0, _extend2.default)(true, {}, defaultOptions, options);
+
+    // The storage module used to store URLs
+    this._storage = this.options.urlStorage;
+
+    // The underlying File/Blob object
+    this.file = file;
+
+    // The URL against which the file will be uploaded
+    this.url = null;
+
+    // The underlying XHR object for the current PATCH request
+    this._xhr = null;
+
+    // The fingerpinrt for the current file (set after start())
+    this._fingerprint = null;
+
+    // The offset used in the current PATCH request
+    this._offset = null;
+
+    // True if the current PATCH request has been aborted
+    this._aborted = false;
+
+    // The file's size in bytes
+    this._size = null;
+
+    // The Source object which will wrap around the given file and provides us
+    // with a unified interface for getting its size and slice chunks from its
+    // content allowing us to easily handle Files, Blobs, Buffers and Streams.
+    this._source = null;
+
+    // The current count of attempts which have been made. Null indicates none.
+    this._retryAttempt = 0;
+
+    // The timeout's ID which is used to delay the next retry
+    this._retryTimeout = null;
+
+    // The offset of the remote upload before the latest attempt was started.
+    this._offsetBeforeRetry = 0;
+  }
+
+  _createClass(Upload, [{
+    key: "start",
+    value: function start() {
+      var _this = this;
+
+      var file = this.file;
+
+      if (!file) {
+        this._emitError(new Error("tus: no file or stream to upload provided"));
+        return;
+      }
+
+      if (!this.options.endpoint && !this.options.uploadUrl) {
+        this._emitError(new Error("tus: neither an endpoint or an upload URL is provided"));
+        return;
+      }
+
+      if (this.options.resume && this._storage == null) {
+        this._storage = (0, _storage.getStorage)();
+      }
+
+      if (this._source) {
+        this._start(this._source);
+      } else {
+        var fileReader = this.options.fileReader || _source.getSource;
+        fileReader(file, this.options.chunkSize, function (err, source) {
+          if (err) {
+            _this._emitError(err);
+            return;
+          }
+
+          _this._source = source;
+          _this._start(source);
+        });
+      }
+    }
+  }, {
+    key: "_start",
+    value: function _start(source) {
+      var _this2 = this;
+
+      var file = this.file;
+
+      // First, we look at the uploadLengthDeferred option.
+      // Next, we check if the caller has supplied a manual upload size.
+      // Finally, we try to use the calculated size from the source object.
+      if (this.options.uploadLengthDeferred) {
+        this._size = null;
+      } else if (this.options.uploadSize != null) {
+        this._size = +this.options.uploadSize;
+        if (isNaN(this._size)) {
+          this._emitError(new Error("tus: cannot convert `uploadSize` option into a number"));
+          return;
+        }
+      } else {
+        this._size = source.size;
+        if (this._size == null) {
+          this._emitError(new Error("tus: cannot automatically derive upload's size from input and must be specified manually using the `uploadSize` option"));
+          return;
+        }
+      }
+
+      var retryDelays = this.options.retryDelays;
+      if (retryDelays != null) {
+        if (Object.prototype.toString.call(retryDelays) !== "[object Array]") {
+          this._emitError(new Error("tus: the `retryDelays` option must either be an array or null"));
+          return;
+        } else {
+          var errorCallback = this.options.onError;
+          this.options.onError = function (err) {
+            // Restore the original error callback which may have been set.
+            _this2.options.onError = errorCallback;
+
+            // We will reset the attempt counter if
+            // - we were already able to connect to the server (offset != null) and
+            // - we were able to upload a small chunk of data to the server
+            var shouldResetDelays = _this2._offset != null && _this2._offset > _this2._offsetBeforeRetry;
+            if (shouldResetDelays) {
+              _this2._retryAttempt = 0;
+            }
+
+            var isOnline = true;
+            if (typeof window !== "undefined" && "navigator" in window && window.navigator.onLine === false) {
+              isOnline = false;
+            }
+
+            // We only attempt a retry if
+            // - we didn't exceed the maxium number of retries, yet, and
+            // - this error was caused by a request or it's response and
+            // - the error is server error (i.e. no a status 4xx or a 409 or 423) and
+            // - the browser does not indicate that we are offline
+            var status = err.originalRequest ? err.originalRequest.status : 0;
+            var isServerError = !inStatusCategory(status, 400) || status === 409 || status === 423;
+            var shouldRetry = _this2._retryAttempt < retryDelays.length && err.originalRequest != null && isServerError && isOnline;
+
+            if (!shouldRetry) {
+              _this2._emitError(err);
+              return;
+            }
+
+            var delay = retryDelays[_this2._retryAttempt++];
+
+            _this2._offsetBeforeRetry = _this2._offset;
+            _this2.options.uploadUrl = _this2.url;
+
+            _this2._retryTimeout = setTimeout(function () {
+              _this2.start();
+            }, delay);
+          };
+        }
+      }
+
+      // Reset the aborted flag when the upload is started or else the
+      // _startUpload will stop before sending a request if the upload has been
+      // aborted previously.
+      this._aborted = false;
+
+      // The upload had been started previously and we should reuse this URL.
+      if (this.url != null) {
+        this._resumeUpload();
+        return;
+      }
+
+      // A URL has manually been specified, so we try to resume
+      if (this.options.uploadUrl != null) {
+        this.url = this.options.uploadUrl;
+        this._resumeUpload();
+        return;
+      }
+
+      // Try to find the endpoint for the file in the storage
+      if (this._hasStorage()) {
+        this.options.fingerprint(file, this.options, function (err, fingerprintValue) {
+          if (err) {
+            _this2._emitError(err);
+            return;
+          }
+
+          _this2._fingerprint = fingerprintValue;
+          _this2._storage.getItem(_this2._fingerprint, function (err, resumedUrl) {
+            if (err) {
+              _this2._emitError(err);
+              return;
+            }
+
+            if (resumedUrl != null) {
+              _this2.url = resumedUrl;
+              _this2._resumeUpload();
+            } else {
+              _this2._createUpload();
+            }
+          });
+        });
+      } else {
+        // An upload has not started for the file yet, so we start a new one
+        this._createUpload();
+      }
+    }
+  }, {
+    key: "abort",
+    value: function abort(shouldTerminate, cb) {
+      var _this3 = this;
+
+      if (this._xhr !== null) {
+        this._xhr.abort();
+        this._source.close();
+      }
+      this._aborted = true;
+
+      if (this._retryTimeout != null) {
+        clearTimeout(this._retryTimeout);
+        this._retryTimeout = null;
+      }
+
+      cb = cb || function () {};
+      if (shouldTerminate) {
+        Upload.terminate(this.url, this.options, function (err, xhr) {
+          if (err) {
+            return cb(err, xhr);
+          }
+
+          _this3._hasStorage() ? _this3._storage.removeItem(_this3._fingerprint, cb) : cb();
+        });
+      } else {
+        cb();
+      }
+    }
+  }, {
+    key: "_hasStorage",
+    value: function _hasStorage() {
+      return this.options.resume && this._storage;
+    }
+  }, {
+    key: "_emitXhrError",
+    value: function _emitXhrError(xhr, err, causingErr) {
+      this._emitError(new _error2.default(err, causingErr, xhr));
+    }
+  }, {
+    key: "_emitError",
+    value: function _emitError(err) {
+      if (typeof this.options.onError === "function") {
+        this.options.onError(err);
+      } else {
+        throw err;
+      }
+    }
+  }, {
+    key: "_emitSuccess",
+    value: function _emitSuccess() {
+      if (typeof this.options.onSuccess === "function") {
+        this.options.onSuccess();
+      }
+    }
+
+    /**
+     * Publishes notification when data has been sent to the server. This
+     * data may not have been accepted by the server yet.
+     * @param  {number} bytesSent  Number of bytes sent to the server.
+     * @param  {number} bytesTotal Total number of bytes to be sent to the server.
+     */
+
+  }, {
+    key: "_emitProgress",
+    value: function _emitProgress(bytesSent, bytesTotal) {
+      if (typeof this.options.onProgress === "function") {
+        this.options.onProgress(bytesSent, bytesTotal);
+      }
+    }
+
+    /**
+     * Publishes notification when a chunk of data has been sent to the server
+     * and accepted by the server.
+     * @param  {number} chunkSize  Size of the chunk that was accepted by the
+     *                             server.
+     * @param  {number} bytesAccepted Total number of bytes that have been
+     *                                accepted by the server.
+     * @param  {number} bytesTotal Total number of bytes to be sent to the server.
+     */
+
+  }, {
+    key: "_emitChunkComplete",
+    value: function _emitChunkComplete(chunkSize, bytesAccepted, bytesTotal) {
+      if (typeof this.options.onChunkComplete === "function") {
+        this.options.onChunkComplete(chunkSize, bytesAccepted, bytesTotal);
+      }
+    }
+
+    /**
+     * Set the headers used in the request and the withCredentials property
+     * as defined in the options
+     *
+     * @param {XMLHttpRequest} xhr
+     */
+
+  }, {
+    key: "_setupXHR",
+    value: function _setupXHR(xhr) {
+      this._xhr = xhr;
+      setupXHR(xhr, this.options);
+    }
+
+    /**
+     * Create a new upload using the creation extension by sending a POST
+     * request to the endpoint. After successful creation the file will be
+     * uploaded
+     *
+     * @api private
+     */
+
+  }, {
+    key: "_createUpload",
+    value: function _createUpload() {
+      var _this4 = this;
+
+      if (!this.options.endpoint) {
+        this._emitError(new Error("tus: unable to create upload because no endpoint is provided"));
+        return;
+      }
+
+      var xhr = (0, _request.newRequest)();
+      xhr.open("POST", this.options.endpoint, true);
+
+      xhr.onload = function () {
+        if (!inStatusCategory(xhr.status, 200)) {
+          _this4._emitXhrError(xhr, new Error("tus: unexpected response while creating upload"));
+          return;
+        }
+
+        var location = xhr.getResponseHeader("Location");
+        if (location == null) {
+          _this4._emitXhrError(xhr, new Error("tus: invalid or missing Location header"));
+          return;
+        }
+
+        _this4.url = (0, _request.resolveUrl)(_this4.options.endpoint, location);
+
+        if (_this4._size === 0) {
+          // Nothing to upload and file was successfully created
+          _this4._emitSuccess();
+          _this4._source.close();
+          return;
+        }
+
+        if (_this4._hasStorage()) {
+          _this4._storage.setItem(_this4._fingerprint, _this4.url, function (err) {
+            if (err) {
+              _this4._emitError(err);
+            }
+          });
+        }
+
+        if (_this4.options.uploadDataDuringCreation) {
+          _this4._handleUploadResponse(xhr);
+        } else {
+          _this4._offset = 0;
+          _this4._startUpload();
+        }
+      };
+
+      xhr.onerror = function (err) {
+        _this4._emitXhrError(xhr, new Error("tus: failed to create upload"), err);
+      };
+
+      this._setupXHR(xhr);
+      if (this.options.uploadLengthDeferred) {
+        xhr.setRequestHeader("Upload-Defer-Length", 1);
+      } else {
+        xhr.setRequestHeader("Upload-Length", this._size);
+      }
+
+      // Add metadata if values have been added
+      var metadata = encodeMetadata(this.options.metadata);
+      if (metadata !== "") {
+        xhr.setRequestHeader("Upload-Metadata", metadata);
+      }
+
+      if (this.options.uploadDataDuringCreation && !this.options.uploadLengthDeferred) {
+        this._offset = 0;
+        this._addChunkToRequest(xhr);
+      } else {
+        xhr.send(null);
+      }
+    }
+
+    /*
+     * Try to resume an existing upload. First a HEAD request will be sent
+     * to retrieve the offset. If the request fails a new upload will be
+     * created. In the case of a successful response the file will be uploaded.
+     *
+     * @api private
+     */
+
+  }, {
+    key: "_resumeUpload",
+    value: function _resumeUpload() {
+      var _this5 = this;
+
+      var xhr = (0, _request.newRequest)();
+      xhr.open("HEAD", this.url, true);
+
+      xhr.onload = function () {
+        if (!inStatusCategory(xhr.status, 200)) {
+          if (_this5._hasStorage() && inStatusCategory(xhr.status, 400)) {
+            // Remove stored fingerprint and corresponding endpoint,
+            // on client errors since the file can not be found
+            _this5._storage.removeItem(_this5._fingerprint, function (err) {
+              if (err) {
+                _this5._emitError(err);
+              }
+            });
+          }
+
+          // If the upload is locked (indicated by the 423 Locked status code), we
+          // emit an error instead of directly starting a new upload. This way the
+          // retry logic can catch the error and will retry the upload. An upload
+          // is usually locked for a short period of time and will be available
+          // afterwards.
+          if (xhr.status === 423) {
+            _this5._emitXhrError(xhr, new Error("tus: upload is currently locked; retry later"));
+            return;
+          }
+
+          if (!_this5.options.endpoint) {
+            // Don't attempt to create a new upload if no endpoint is provided.
+            _this5._emitXhrError(xhr, new Error("tus: unable to resume upload (new upload cannot be created without an endpoint)"));
+            return;
+          }
+
+          // Try to create a new upload
+          _this5.url = null;
+          _this5._createUpload();
+          return;
+        }
+
+        var offset = parseInt(xhr.getResponseHeader("Upload-Offset"), 10);
+        if (isNaN(offset)) {
+          _this5._emitXhrError(xhr, new Error("tus: invalid or missing offset value"));
+          return;
+        }
+
+        var length = parseInt(xhr.getResponseHeader("Upload-Length"), 10);
+        if (isNaN(length) && !_this5.options.uploadLengthDeferred) {
+          _this5._emitXhrError(xhr, new Error("tus: invalid or missing length value"));
+          return;
+        }
+
+        // Upload has already been completed and we do not need to send additional
+        // data to the server
+        if (offset === length) {
+          _this5._emitProgress(length, length);
+          _this5._emitSuccess();
+          return;
+        }
+
+        _this5._offset = offset;
+        _this5._startUpload();
+      };
+
+      xhr.onerror = function (err) {
+        _this5._emitXhrError(xhr, new Error("tus: failed to resume upload"), err);
+      };
+
+      this._setupXHR(xhr);
+      xhr.send(null);
+    }
+
+    /**
+     * Start uploading the file using PATCH requests. The file will be divided
+     * into chunks as specified in the chunkSize option. During the upload
+     * the onProgress event handler may be invoked multiple times.
+     *
+     * @api private
+     */
+
+  }, {
+    key: "_startUpload",
+    value: function _startUpload() {
+      var _this6 = this;
+
+      // If the upload has been aborted, we will not send the next PATCH request.
+      // This is important if the abort method was called during a callback, such
+      // as onChunkComplete or onProgress.
+      if (this._aborted) {
+        return;
+      }
+
+      var xhr = (0, _request.newRequest)();
+
+      // Some browser and servers may not support the PATCH method. For those
+      // cases, you can tell tus-js-client to use a POST request with the
+      // X-HTTP-Method-Override header for simulating a PATCH request.
+      if (this.options.overridePatchMethod) {
+        xhr.open("POST", this.url, true);
+        xhr.setRequestHeader("X-HTTP-Method-Override", "PATCH");
+      } else {
+        xhr.open("PATCH", this.url, true);
+      }
+
+      xhr.onload = function () {
+        if (!inStatusCategory(xhr.status, 200)) {
+          _this6._emitXhrError(xhr, new Error("tus: unexpected response while uploading chunk"));
+          return;
+        }
+
+        _this6._handleUploadResponse(xhr);
+      };
+
+      xhr.onerror = function (err) {
+        // Don't emit an error if the upload was aborted manually
+        if (_this6._aborted) {
+          return;
+        }
+
+        _this6._emitXhrError(xhr, new Error("tus: failed to upload chunk at offset " + _this6._offset), err);
+      };
+
+      this._setupXHR(xhr);
+
+      xhr.setRequestHeader("Upload-Offset", this._offset);
+      this._addChunkToRequest(xhr);
+    }
+
+    /**
+     * _addChunktoRequest reads a chunk from the source and sends it using the
+     * supplied XHR object. It will not handle the response.
+     */
+
+  }, {
+    key: "_addChunkToRequest",
+    value: function _addChunkToRequest(xhr) {
+      var _this7 = this;
+
+      // Test support for progress events before attaching an event listener
+      if ("upload" in xhr) {
+        xhr.upload.onprogress = function (e) {
+          if (!e.lengthComputable) {
+            return;
+          }
+
+          _this7._emitProgress(start + e.loaded, _this7._size);
+        };
+      }
+
+      xhr.setRequestHeader("Content-Type", "application/offset+octet-stream");
+
+      var start = this._offset;
+      var end = this._offset + this.options.chunkSize;
+
+      // The specified chunkSize may be Infinity or the calcluated end position
+      // may exceed the file's size. In both cases, we limit the end position to
+      // the input's total size for simpler calculations and correctness.
+      if ((end === Infinity || end > this._size) && !this.options.uploadLengthDeferred) {
+        end = this._size;
+      }
+
+      this._source.slice(start, end, function (err, value, complete) {
+        if (err) {
+          _this7._emitError(err);
+          return;
+        }
+
+        if (_this7.options.uploadLengthDeferred) {
+          if (complete) {
+            _this7._size = _this7._offset + (value && value.size ? value.size : 0);
+            xhr.setRequestHeader("Upload-Length", _this7._size);
+          }
+        }
+
+        if (value === null) {
+          xhr.send();
+        } else {
+          xhr.send(value);
+          _this7._emitProgress(_this7._offset, _this7._size);
+        }
+      });
+    }
+
+    /**
+     * _handleUploadResponse is used by requests that haven been sent using _addChunkToRequest
+     * and already have received a response.
+     */
+
+  }, {
+    key: "_handleUploadResponse",
+    value: function _handleUploadResponse(xhr) {
+      var _this8 = this;
+
+      var offset = parseInt(xhr.getResponseHeader("Upload-Offset"), 10);
+      if (isNaN(offset)) {
+        this._emitXhrError(xhr, new Error("tus: invalid or missing offset value"));
+        return;
+      }
+
+      this._emitProgress(offset, this._size);
+      this._emitChunkComplete(offset - this._offset, offset, this._size);
+
+      this._offset = offset;
+
+      if (offset == this._size) {
+        if (this.options.removeFingerprintOnSuccess && this.options.resume) {
+          // Remove stored fingerprint and corresponding endpoint. This causes
+          // new upload of the same file must be treated as a different file.
+          this._storage.removeItem(this._fingerprint, function (err) {
+            if (err) {
+              _this8._emitError(err);
+            }
+          });
+        }
+
+        // Yay, finally done :)
+        this._emitSuccess();
+        this._source.close();
+        return;
+      }
+
+      this._startUpload();
+    }
+  }], [{
+    key: "terminate",
+    value: function terminate(url, options, cb) {
+      if (typeof options !== "function" && typeof cb !== "function") {
+        throw new Error("tus: a callback function must be specified");
+      }
+
+      if (typeof options === "function") {
+        cb = options;
+        options = {};
+      }
+
+      var xhr = (0, _request.newRequest)();
+      xhr.open("DELETE", url, true);
+
+      xhr.onload = function () {
+        if (xhr.status !== 204) {
+          cb(new _error2.default(new Error("tus: unexpected response while terminating upload"), null, xhr));
+          return;
+        }
+
+        cb();
+      };
+
+      xhr.onerror = function (err) {
+        cb(new _error2.default(err, new Error("tus: failed to terminate upload"), xhr));
+      };
+
+      setupXHR(xhr, options);
+      xhr.send(null);
+    }
+  }]);
+
+  return Upload;
+}();
+
+function encodeMetadata(metadata) {
+  var encoded = [];
+
+  for (var key in metadata) {
+    encoded.push(key + " " + _jsBase.Base64.encode(metadata[key]));
+  }
+
+  return encoded.join(",");
+}
+
+/**
+ * Checks whether a given status is in the range of the expected category.
+ * For example, only a status between 200 and 299 will satisfy the category 200.
+ *
+ * @api private
+ */
+function inStatusCategory(status, category) {
+  return status >= category && status < category + 100;
+}
+
+function setupXHR(xhr, options) {
+  xhr.setRequestHeader("Tus-Resumable", "1.0.0");
+  var headers = options.headers || {};
+
+  for (var name in headers) {
+    xhr.setRequestHeader(name, headers[name]);
+  }
+
+  xhr.withCredentials = options.withCredentials;
+}
+
+Upload.defaultOptions = defaultOptions;
+
+exports.default = Upload;
+},{"./error":"../node_modules/tus-js-client/lib.es5/error.js","extend":"../node_modules/extend/index.js","js-base64":"../node_modules/js-base64/base64.js","./node/request":"../node_modules/tus-js-client/lib.es5/browser/request.js","./node/source":"../node_modules/tus-js-client/lib.es5/browser/source.js","./node/storage":"../node_modules/tus-js-client/lib.es5/browser/storage.js","./node/fingerprint":"../node_modules/tus-js-client/lib.es5/browser/fingerprint.js"}],"../node_modules/tus-js-client/lib.es5/index.js":[function(require,module,exports) {
+"use strict";
+
+var _upload = require("./upload");
+
+var _upload2 = _interopRequireDefault(_upload);
+
+var _storage = require("./node/storage");
+
+var storage = _interopRequireWildcard(_storage);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* global window */
+var defaultOptions = _upload2.default.defaultOptions;
+
+
+var moduleExport = {
+  Upload: _upload2.default,
+  canStoreURLs: storage.canStoreURLs,
+  defaultOptions: defaultOptions
+};
+
+if (typeof window !== "undefined") {
+  // Browser environment using XMLHttpRequest
+  var _window = window,
+      XMLHttpRequest = _window.XMLHttpRequest,
+      Blob = _window.Blob;
+
+
+  moduleExport.isSupported = XMLHttpRequest && Blob && typeof Blob.prototype.slice === "function";
+} else {
+  // Node.js environment using http module
+  moduleExport.isSupported = true;
+  // make FileStorage module available as it will not be set by default.
+  moduleExport.FileStorage = storage.FileStorage;
+}
+
+// The usage of the commonjs exporting syntax instead of the new ECMAScript
+// one is actually inteded and prevents weird behaviour if we are trying to
+// import this module in another module using Babel.
+module.exports = moduleExport;
+},{"./upload":"../node_modules/tus-js-client/lib.es5/upload.js","./node/storage":"../node_modules/tus-js-client/lib.es5/browser/storage.js"}],"../node_modules/@uppy/companion-client/lib/AuthError.js":[function(require,module,exports) {
+'use strict';
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+var AuthError =
+/*#__PURE__*/
+function (_Error) {
+  _inheritsLoose(AuthError, _Error);
+
+  function AuthError() {
+    var _this;
+
+    _this = _Error.call(this, 'Authorization required') || this;
+    _this.name = 'AuthError';
+    _this.isAuthError = true;
+    return _this;
+  }
+
+  return AuthError;
+}(_wrapNativeSuper(Error));
+
+module.exports = AuthError;
+},{}],"../node_modules/@uppy/companion-client/lib/RequestClient.js":[function(require,module,exports) {
+'use strict';
+
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var AuthError = require('./AuthError'); // Remove the trailing slash so we can always safely append /xyz.
+
+
+function stripSlash(url) {
+  return url.replace(/\/$/, '');
+}
+
+module.exports = (_temp = _class =
+/*#__PURE__*/
+function () {
+  function RequestClient(uppy, opts) {
+    this.uppy = uppy;
+    this.opts = opts;
+    this.onReceiveResponse = this.onReceiveResponse.bind(this);
+    this.allowedHeaders = ['accept', 'content-type', 'uppy-auth-token'];
+    this.preflightDone = false;
+  }
+
+  var _proto = RequestClient.prototype;
+
+  _proto.headers = function headers() {
+    var userHeaders = this.opts.companionHeaders || this.opts.serverHeaders || {};
+    return Promise.resolve(_extends({}, this.defaultHeaders, {}, userHeaders));
+  };
+
+  _proto._getPostResponseFunc = function _getPostResponseFunc(skip) {
+    var _this = this;
+
+    return function (response) {
+      if (!skip) {
+        return _this.onReceiveResponse(response);
+      }
+
+      return response;
+    };
+  };
+
+  _proto.onReceiveResponse = function onReceiveResponse(response) {
+    var state = this.uppy.getState();
+    var companion = state.companion || {};
+    var host = this.opts.companionUrl;
+    var headers = response.headers; // Store the self-identified domain name for the Companion instance we just hit.
+
+    if (headers.has('i-am') && headers.get('i-am') !== companion[host]) {
+      var _extends2;
+
+      this.uppy.setState({
+        companion: _extends({}, companion, (_extends2 = {}, _extends2[host] = headers.get('i-am'), _extends2))
+      });
+    }
+
+    return response;
+  };
+
+  _proto._getUrl = function _getUrl(url) {
+    if (/^(https?:|)\/\//.test(url)) {
+      return url;
+    }
+
+    return this.hostname + "/" + url;
+  };
+
+  _proto._json = function _json(res) {
+    if (res.status === 401) {
+      throw new AuthError();
+    }
+
+    if (res.status < 200 || res.status > 300) {
+      var errMsg = "Failed request with status: " + res.status + ". " + res.statusText;
+      return res.json().then(function (errData) {
+        errMsg = errData.message ? errMsg + " message: " + errData.message : errMsg;
+        errMsg = errData.requestId ? errMsg + " request-Id: " + errData.requestId : errMsg;
+        throw new Error(errMsg);
+      }).catch(function () {
+        throw new Error(errMsg);
+      });
+    }
+
+    return res.json();
+  };
+
+  _proto.preflight = function preflight(path) {
+    var _this2 = this;
+
+    return new Promise(function (resolve, reject) {
+      if (_this2.preflightDone) {
+        return resolve(_this2.allowedHeaders.slice());
+      }
+
+      fetch(_this2._getUrl(path), {
+        method: 'OPTIONS'
+      }).then(function (response) {
+        if (response.headers.has('access-control-allow-headers')) {
+          _this2.allowedHeaders = response.headers.get('access-control-allow-headers').split(',').map(function (headerName) {
+            return headerName.trim().toLowerCase();
+          });
+        }
+
+        _this2.preflightDone = true;
+        resolve(_this2.allowedHeaders.slice());
+      }).catch(function (err) {
+        _this2.uppy.log("[CompanionClient] unable to make preflight request " + err, 'warning');
+
+        _this2.preflightDone = true;
+        resolve(_this2.allowedHeaders.slice());
+      });
+    });
+  };
+
+  _proto.preflightAndHeaders = function preflightAndHeaders(path) {
+    var _this3 = this;
+
+    return Promise.all([this.preflight(path), this.headers()]).then(function (_ref) {
+      var allowedHeaders = _ref[0],
+          headers = _ref[1];
+      // filter to keep only allowed Headers
+      Object.keys(headers).forEach(function (header) {
+        if (allowedHeaders.indexOf(header.toLowerCase()) === -1) {
+          _this3.uppy.log("[CompanionClient] excluding unallowed header " + header);
+
+          delete headers[header];
+        }
+      });
+      return headers;
+    });
+  };
+
+  _proto.get = function get(path, skipPostResponse) {
+    var _this4 = this;
+
+    return new Promise(function (resolve, reject) {
+      _this4.preflightAndHeaders(path).then(function (headers) {
+        fetch(_this4._getUrl(path), {
+          method: 'get',
+          headers: headers,
+          credentials: 'same-origin'
+        }).then(_this4._getPostResponseFunc(skipPostResponse)).then(function (res) {
+          return _this4._json(res).then(resolve);
+        }).catch(function (err) {
+          err = err.isAuthError ? err : new Error("Could not get " + _this4._getUrl(path) + ". " + err);
+          reject(err);
+        });
+      }).catch(reject);
+    });
+  };
+
+  _proto.post = function post(path, data, skipPostResponse) {
+    var _this5 = this;
+
+    return new Promise(function (resolve, reject) {
+      _this5.preflightAndHeaders(path).then(function (headers) {
+        fetch(_this5._getUrl(path), {
+          method: 'post',
+          headers: headers,
+          credentials: 'same-origin',
+          body: JSON.stringify(data)
+        }).then(_this5._getPostResponseFunc(skipPostResponse)).then(function (res) {
+          return _this5._json(res).then(resolve);
+        }).catch(function (err) {
+          err = err.isAuthError ? err : new Error("Could not post " + _this5._getUrl(path) + ". " + err);
+          reject(err);
+        });
+      }).catch(reject);
+    });
+  };
+
+  _proto.delete = function _delete(path, data, skipPostResponse) {
+    var _this6 = this;
+
+    return new Promise(function (resolve, reject) {
+      _this6.preflightAndHeaders(path).then(function (headers) {
+        fetch(_this6.hostname + "/" + path, {
+          method: 'delete',
+          headers: headers,
+          credentials: 'same-origin',
+          body: data ? JSON.stringify(data) : null
+        }).then(_this6._getPostResponseFunc(skipPostResponse)).then(function (res) {
+          return _this6._json(res).then(resolve);
+        }).catch(function (err) {
+          err = err.isAuthError ? err : new Error("Could not delete " + _this6._getUrl(path) + ". " + err);
+          reject(err);
+        });
+      }).catch(reject);
+    });
+  };
+
+  _createClass(RequestClient, [{
+    key: "hostname",
+    get: function get() {
+      var _this$uppy$getState = this.uppy.getState(),
+          companion = _this$uppy$getState.companion;
+
+      var host = this.opts.companionUrl;
+      return stripSlash(companion && companion[host] ? companion[host] : host);
+    }
+  }, {
+    key: "defaultHeaders",
+    get: function get() {
+      return {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Uppy-Versions': "@uppy/companion-client=" + RequestClient.VERSION
+      };
+    }
+  }]);
+
+  return RequestClient;
+}(), _class.VERSION = "1.4.2", _temp);
+},{"./AuthError":"../node_modules/@uppy/companion-client/lib/AuthError.js"}],"../node_modules/@uppy/companion-client/lib/tokenStorage.js":[function(require,module,exports) {
+'use strict';
+/**
+ * This module serves as an Async wrapper for LocalStorage
+ */
+
+module.exports.setItem = function (key, value) {
+  return new Promise(function (resolve) {
+    localStorage.setItem(key, value);
+    resolve();
+  });
+};
+
+module.exports.getItem = function (key) {
+  return Promise.resolve(localStorage.getItem(key));
+};
+
+module.exports.removeItem = function (key) {
+  return new Promise(function (resolve) {
+    localStorage.removeItem(key);
+    resolve();
+  });
+};
+},{}],"../node_modules/@uppy/companion-client/lib/Provider.js":[function(require,module,exports) {
+'use strict';
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+var RequestClient = require('./RequestClient');
+
+var tokenStorage = require('./tokenStorage');
+
+var _getName = function _getName(id) {
+  return id.split('-').map(function (s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }).join(' ');
+};
+
+module.exports =
+/*#__PURE__*/
+function (_RequestClient) {
+  _inheritsLoose(Provider, _RequestClient);
+
+  function Provider(uppy, opts) {
+    var _this;
+
+    _this = _RequestClient.call(this, uppy, opts) || this;
+    _this.provider = opts.provider;
+    _this.id = _this.provider;
+    _this.authProvider = opts.authProvider || _this.provider;
+    _this.name = _this.opts.name || _getName(_this.id);
+    _this.pluginId = _this.opts.pluginId;
+    _this.tokenKey = "companion-" + _this.pluginId + "-auth-token";
+    return _this;
+  }
+
+  var _proto = Provider.prototype;
+
+  _proto.headers = function headers() {
+    var _this2 = this;
+
+    return new Promise(function (resolve, reject) {
+      _RequestClient.prototype.headers.call(_this2).then(function (headers) {
+        _this2.getAuthToken().then(function (token) {
+          resolve(_extends({}, headers, {
+            'uppy-auth-token': token
+          }));
+        });
+      }).catch(reject);
+    });
+  };
+
+  _proto.onReceiveResponse = function onReceiveResponse(response) {
+    response = _RequestClient.prototype.onReceiveResponse.call(this, response);
+    var plugin = this.uppy.getPlugin(this.pluginId);
+    var oldAuthenticated = plugin.getPluginState().authenticated;
+    var authenticated = oldAuthenticated ? response.status !== 401 : response.status < 400;
+    plugin.setPluginState({
+      authenticated: authenticated
+    });
+    return response;
+  } // @todo(i.olarewaju) consider whether or not this method should be exposed
+  ;
+
+  _proto.setAuthToken = function setAuthToken(token) {
+    return this.uppy.getPlugin(this.pluginId).storage.setItem(this.tokenKey, token);
+  };
+
+  _proto.getAuthToken = function getAuthToken() {
+    return this.uppy.getPlugin(this.pluginId).storage.getItem(this.tokenKey);
+  };
+
+  _proto.authUrl = function authUrl() {
+    return this.hostname + "/" + this.id + "/connect";
+  };
+
+  _proto.fileUrl = function fileUrl(id) {
+    return this.hostname + "/" + this.id + "/get/" + id;
+  };
+
+  _proto.list = function list(directory) {
+    return this.get(this.id + "/list/" + (directory || ''));
+  };
+
+  _proto.logout = function logout() {
+    var _this3 = this;
+
+    return new Promise(function (resolve, reject) {
+      _this3.get(_this3.id + "/logout").then(function (res) {
+        _this3.uppy.getPlugin(_this3.pluginId).storage.removeItem(_this3.tokenKey).then(function () {
+          return resolve(res);
+        }).catch(reject);
+      }).catch(reject);
+    });
+  };
+
+  Provider.initPlugin = function initPlugin(plugin, opts, defaultOpts) {
+    plugin.type = 'acquirer';
+    plugin.files = [];
+
+    if (defaultOpts) {
+      plugin.opts = _extends({}, defaultOpts, opts);
+    }
+
+    if (opts.serverUrl || opts.serverPattern) {
+      throw new Error('`serverUrl` and `serverPattern` have been renamed to `companionUrl` and `companionAllowedHosts` respectively in the 0.30.5 release. Please consult the docs (for example, https://uppy.io/docs/instagram/ for the Instagram plugin) and use the updated options.`');
+    }
+
+    if (opts.companionAllowedHosts) {
+      var pattern = opts.companionAllowedHosts; // validate companionAllowedHosts param
+
+      if (typeof pattern !== 'string' && !Array.isArray(pattern) && !(pattern instanceof RegExp)) {
+        throw new TypeError(plugin.id + ": the option \"companionAllowedHosts\" must be one of string, Array, RegExp");
+      }
+
+      plugin.opts.companionAllowedHosts = pattern;
+    } else {
+      // does not start with https://
+      if (/^(?!https?:\/\/).*$/i.test(opts.companionUrl)) {
+        plugin.opts.companionAllowedHosts = "https://" + opts.companionUrl.replace(/^\/\//, '');
+      } else {
+        plugin.opts.companionAllowedHosts = opts.companionUrl;
+      }
+    }
+
+    plugin.storage = plugin.opts.storage || tokenStorage;
+  };
+
+  return Provider;
+}(RequestClient);
+},{"./RequestClient":"../node_modules/@uppy/companion-client/lib/RequestClient.js","./tokenStorage":"../node_modules/@uppy/companion-client/lib/tokenStorage.js"}],"../node_modules/@uppy/companion-client/lib/Socket.js":[function(require,module,exports) {
+var ee = require('namespace-emitter');
+
+module.exports =
+/*#__PURE__*/
+function () {
+  function UppySocket(opts) {
+    this.opts = opts;
+    this._queued = [];
+    this.isOpen = false;
+    this.emitter = ee();
+    this._handleMessage = this._handleMessage.bind(this);
+    this.close = this.close.bind(this);
+    this.emit = this.emit.bind(this);
+    this.on = this.on.bind(this);
+    this.once = this.once.bind(this);
+    this.send = this.send.bind(this);
+
+    if (!opts || opts.autoOpen !== false) {
+      this.open();
+    }
+  }
+
+  var _proto = UppySocket.prototype;
+
+  _proto.open = function open() {
+    var _this = this;
+
+    this.socket = new WebSocket(this.opts.target);
+
+    this.socket.onopen = function (e) {
+      _this.isOpen = true;
+
+      while (_this._queued.length > 0 && _this.isOpen) {
+        var first = _this._queued[0];
+
+        _this.send(first.action, first.payload);
+
+        _this._queued = _this._queued.slice(1);
+      }
+    };
+
+    this.socket.onclose = function (e) {
+      _this.isOpen = false;
+    };
+
+    this.socket.onmessage = this._handleMessage;
+  };
+
+  _proto.close = function close() {
+    if (this.socket) {
+      this.socket.close();
+    }
+  };
+
+  _proto.send = function send(action, payload) {
+    // attach uuid
+    if (!this.isOpen) {
+      this._queued.push({
+        action: action,
+        payload: payload
+      });
+
+      return;
+    }
+
+    this.socket.send(JSON.stringify({
+      action: action,
+      payload: payload
+    }));
+  };
+
+  _proto.on = function on(action, handler) {
+    this.emitter.on(action, handler);
+  };
+
+  _proto.emit = function emit(action, payload) {
+    this.emitter.emit(action, payload);
+  };
+
+  _proto.once = function once(action, handler) {
+    this.emitter.once(action, handler);
+  };
+
+  _proto._handleMessage = function _handleMessage(e) {
+    try {
+      var message = JSON.parse(e.data);
+      this.emit(message.action, message.payload);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return UppySocket;
+}();
+},{"namespace-emitter":"../node_modules/namespace-emitter/index.js"}],"../node_modules/@uppy/companion-client/lib/index.js":[function(require,module,exports) {
+'use strict';
+/**
+ * Manages communications with Companion
+ */
+
+var RequestClient = require('./RequestClient');
+
+var Provider = require('./Provider');
+
+var Socket = require('./Socket');
+
+module.exports = {
+  RequestClient: RequestClient,
+  Provider: Provider,
+  Socket: Socket
+};
+},{"./RequestClient":"../node_modules/@uppy/companion-client/lib/RequestClient.js","./Provider":"../node_modules/@uppy/companion-client/lib/Provider.js","./Socket":"../node_modules/@uppy/companion-client/lib/Socket.js"}],"../node_modules/@uppy/utils/lib/emitSocketProgress.js":[function(require,module,exports) {
+var throttle = require('lodash.throttle');
+
+function _emitSocketProgress(uploader, progressData, file) {
+  var progress = progressData.progress,
+      bytesUploaded = progressData.bytesUploaded,
+      bytesTotal = progressData.bytesTotal;
+
+  if (progress) {
+    uploader.uppy.log("Upload progress: " + progress);
+    uploader.uppy.emit('upload-progress', file, {
+      uploader: uploader,
+      bytesUploaded: bytesUploaded,
+      bytesTotal: bytesTotal
+    });
+  }
+}
+
+module.exports = throttle(_emitSocketProgress, 300, {
+  leading: true,
+  trailing: true
+});
+},{"lodash.throttle":"../node_modules/lodash.throttle/index.js"}],"../node_modules/@uppy/utils/lib/getSocketHost.js":[function(require,module,exports) {
+module.exports = function getSocketHost(url) {
+  // get the host domain
+  var regex = /^(?:https?:\/\/|\/\/)?(?:[^@\n]+@)?(?:www\.)?([^\n]+)/i;
+  var host = regex.exec(url)[1];
+  var socketProtocol = /^http:\/\//i.test(url) ? 'ws' : 'wss';
+  return socketProtocol + "://" + host;
+};
+},{}],"../node_modules/@uppy/utils/lib/settle.js":[function(require,module,exports) {
+module.exports = function settle(promises) {
+  var resolutions = [];
+  var rejections = [];
+
+  function resolved(value) {
+    resolutions.push(value);
+  }
+
+  function rejected(error) {
+    rejections.push(error);
+  }
+
+  var wait = Promise.all(promises.map(function (promise) {
+    return promise.then(resolved, rejected);
+  }));
+  return wait.then(function () {
+    return {
+      successful: resolutions,
+      failed: rejections
+    };
+  });
+};
+},{}],"../node_modules/@uppy/utils/lib/EventTracker.js":[function(require,module,exports) {
+/**
+ * Create a wrapper around an event emitter with a `remove` method to remove
+ * all events that were added using the wrapped emitter.
+ */
+module.exports =
+/*#__PURE__*/
+function () {
+  function EventTracker(emitter) {
+    this._events = [];
+    this._emitter = emitter;
+  }
+
+  var _proto = EventTracker.prototype;
+
+  _proto.on = function on(event, fn) {
+    this._events.push([event, fn]);
+
+    return this._emitter.on(event, fn);
+  };
+
+  _proto.remove = function remove() {
+    var _this = this;
+
+    this._events.forEach(function (_ref) {
+      var event = _ref[0],
+          fn = _ref[1];
+
+      _this._emitter.off(event, fn);
+    });
+  };
+
+  return EventTracker;
+}();
+},{}],"../node_modules/@uppy/utils/lib/RateLimitedQueue.js":[function(require,module,exports) {
+/**
+ * Array.prototype.findIndex ponyfill for old browsers.
+ */
+function findIndex(array, predicate) {
+  for (var i = 0; i < array.length; i++) {
+    if (predicate(array[i])) return i;
+  }
+
+  return -1;
+}
+
+function createCancelError() {
+  return new Error('Cancelled');
+}
+
+module.exports =
+/*#__PURE__*/
+function () {
+  function RateLimitedQueue(limit) {
+    if (typeof limit !== 'number' || limit === 0) {
+      this.limit = Infinity;
+    } else {
+      this.limit = limit;
+    }
+
+    this.activeRequests = 0;
+    this.queuedHandlers = [];
+  }
+
+  var _proto = RateLimitedQueue.prototype;
+
+  _proto._call = function _call(fn) {
+    var _this = this;
+
+    this.activeRequests += 1;
+    var _done = false;
+    var cancelActive;
+
+    try {
+      cancelActive = fn();
+    } catch (err) {
+      this.activeRequests -= 1;
+      throw err;
+    }
+
+    return {
+      abort: function abort() {
+        if (_done) return;
+        _done = true;
+        _this.activeRequests -= 1;
+        cancelActive();
+
+        _this._queueNext();
+      },
+      done: function done() {
+        if (_done) return;
+        _done = true;
+        _this.activeRequests -= 1;
+
+        _this._queueNext();
+      }
+    };
+  };
+
+  _proto._queueNext = function _queueNext() {
+    var _this2 = this;
+
+    // Do it soon but not immediately, this allows clearing out the entire queue synchronously
+    // one by one without continuously _advancing_ it (and starting new tasks before immediately
+    // aborting them)
+    Promise.resolve().then(function () {
+      _this2._next();
+    });
+  };
+
+  _proto._next = function _next() {
+    if (this.activeRequests >= this.limit) {
+      return;
+    }
+
+    if (this.queuedHandlers.length === 0) {
+      return;
+    } // Dispatch the next request, and update the abort/done handlers
+    // so that cancelling it does the Right Thing (and doesn't just try
+    // to dequeue an already-running request).
+
+
+    var next = this.queuedHandlers.shift();
+
+    var handler = this._call(next.fn);
+
+    next.abort = handler.abort;
+    next.done = handler.done;
+  };
+
+  _proto._queue = function _queue(fn, options) {
+    var _this3 = this;
+
+    if (options === void 0) {
+      options = {};
+    }
+
+    var handler = {
+      fn: fn,
+      priority: options.priority || 0,
+      abort: function abort() {
+        _this3._dequeue(handler);
+      },
+      done: function done() {
+        throw new Error('Cannot mark a queued request as done: this indicates a bug');
+      }
+    };
+    var index = findIndex(this.queuedHandlers, function (other) {
+      return handler.priority > other.priority;
+    });
+
+    if (index === -1) {
+      this.queuedHandlers.push(handler);
+    } else {
+      this.queuedHandlers.splice(index, 0, handler);
+    }
+
+    return handler;
+  };
+
+  _proto._dequeue = function _dequeue(handler) {
+    var index = this.queuedHandlers.indexOf(handler);
+
+    if (index !== -1) {
+      this.queuedHandlers.splice(index, 1);
+    }
+  };
+
+  _proto.run = function run(fn, queueOptions) {
+    if (this.activeRequests < this.limit) {
+      return this._call(fn);
+    }
+
+    return this._queue(fn, queueOptions);
+  };
+
+  _proto.wrapPromiseFunction = function wrapPromiseFunction(fn, queueOptions) {
+    var _this4 = this;
+
+    return function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var queuedRequest;
+      var outerPromise = new Promise(function (resolve, reject) {
+        queuedRequest = _this4.run(function () {
+          var cancelError;
+          var innerPromise;
+
+          try {
+            innerPromise = Promise.resolve(fn.apply(void 0, args));
+          } catch (err) {
+            innerPromise = Promise.reject(err);
+          }
+
+          innerPromise.then(function (result) {
+            if (cancelError) {
+              reject(cancelError);
+            } else {
+              queuedRequest.done();
+              resolve(result);
+            }
+          }, function (err) {
+            if (cancelError) {
+              reject(cancelError);
+            } else {
+              queuedRequest.done();
+              reject(err);
+            }
+          });
+          return function () {
+            cancelError = createCancelError();
+          };
+        }, queueOptions);
+      });
+
+      outerPromise.abort = function () {
+        queuedRequest.abort();
+      };
+
+      return outerPromise;
+    };
+  };
+
+  return RateLimitedQueue;
+}();
+},{}],"../node_modules/@uppy/tus/lib/getFingerprint.js":[function(require,module,exports) {
+var tus = require('tus-js-client');
+
+function isCordova() {
+  return typeof window !== 'undefined' && (typeof window.PhoneGap !== 'undefined' || typeof window.Cordova !== 'undefined' || typeof window.cordova !== 'undefined');
+}
+
+function isReactNative() {
+  return typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative';
+} // We override tus fingerprint to uppy’s `file.id`, since the `file.id`
+// now also includes `relativePath` for files added from folders.
+// This means you can add 2 identical files, if one is in folder a,
+// the other in folder b — `a/file.jpg` and `b/file.jpg`, when added
+// together with a folder, will be treated as 2 separate files.
+//
+// For React Native and Cordova, we let tus-js-client’s default
+// fingerprint handling take charge.
+
+
+module.exports = function getFingerprint(uppyFileObj) {
+  return function (file, options, callback) {
+    if (isCordova() || isReactNative()) {
+      return tus.Upload.defaultOptions.fingerprint(file, options, callback);
+    }
+
+    var uppyFingerprint = ['tus', uppyFileObj.id, options.endpoint].join('-');
+    return callback(null, uppyFingerprint);
+  };
+};
+},{"tus-js-client":"../node_modules/tus-js-client/lib.es5/index.js"}],"../node_modules/@uppy/tus/lib/index.js":[function(require,module,exports) {
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+var _require = require('@uppy/core'),
+    Plugin = _require.Plugin;
+
+var tus = require('tus-js-client');
+
+var _require2 = require('@uppy/companion-client'),
+    Provider = _require2.Provider,
+    RequestClient = _require2.RequestClient,
+    Socket = _require2.Socket;
+
+var emitSocketProgress = require('@uppy/utils/lib/emitSocketProgress');
+
+var getSocketHost = require('@uppy/utils/lib/getSocketHost');
+
+var settle = require('@uppy/utils/lib/settle');
+
+var EventTracker = require('@uppy/utils/lib/EventTracker');
+
+var RateLimitedQueue = require('@uppy/utils/lib/RateLimitedQueue');
+
+var getFingerprint = require('./getFingerprint');
+/** @typedef {import('..').TusOptions} TusOptions */
+
+/** @typedef {import('@uppy/core').Uppy} Uppy */
+
+/** @typedef {import('@uppy/core').UppyFile} UppyFile */
+
+/** @typedef {import('@uppy/core').FailedUppyFile<{}>} FailedUppyFile */
+
+/**
+ * Extracted from https://github.com/tus/tus-js-client/blob/master/lib/upload.js#L13
+ * excepted we removed 'fingerprint' key to avoid adding more dependencies
+ *
+ * @type {TusOptions}
+ */
+
+
+var tusDefaultOptions = {
+  endpoint: '',
+  resume: true,
+  onProgress: null,
+  onChunkComplete: null,
+  onSuccess: null,
+  onError: null,
+  headers: {},
+  chunkSize: Infinity,
+  withCredentials: false,
+  uploadUrl: null,
+  uploadSize: null,
+  overridePatchMethod: false,
+  retryDelays: null
+};
+/**
+ * Tus resumable file uploader
+ */
+
+module.exports = (_temp = _class =
+/*#__PURE__*/
+function (_Plugin) {
+  _inheritsLoose(Tus, _Plugin);
+
+  /**
+   * @param {Uppy} uppy
+   * @param {TusOptions} opts
+   */
+  function Tus(uppy, opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, opts) || this;
+    _this.type = 'uploader';
+    _this.id = _this.opts.id || 'Tus';
+    _this.title = 'Tus'; // set default options
+
+    var defaultOptions = {
+      resume: true,
+      autoRetry: true,
+      useFastRemoteRetry: true,
+      limit: 0,
+      retryDelays: [0, 1000, 3000, 5000]
+    }; // merge default options with the ones set by user
+
+    /** @type {import("..").TusOptions} */
+
+    _this.opts = _extends({}, defaultOptions, opts);
+    /**
+     * Simultaneous upload limiting is shared across all uploads with this plugin.
+     *
+     * @type {RateLimitedQueue}
+     */
+
+    _this.requests = new RateLimitedQueue(_this.opts.limit);
+    _this.uploaders = Object.create(null);
+    _this.uploaderEvents = Object.create(null);
+    _this.uploaderSockets = Object.create(null);
+    _this.handleResetProgress = _this.handleResetProgress.bind(_assertThisInitialized(_this));
+    _this.handleUpload = _this.handleUpload.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  var _proto = Tus.prototype;
+
+  _proto.handleResetProgress = function handleResetProgress() {
+    var files = _extends({}, this.uppy.getState().files);
+
+    Object.keys(files).forEach(function (fileID) {
+      // Only clone the file object if it has a Tus `uploadUrl` attached.
+      if (files[fileID].tus && files[fileID].tus.uploadUrl) {
+        var tusState = _extends({}, files[fileID].tus);
+
+        delete tusState.uploadUrl;
+        files[fileID] = _extends({}, files[fileID], {
+          tus: tusState
+        });
+      }
+    });
+    this.uppy.setState({
+      files: files
+    });
+  }
+  /**
+   * Clean up all references for a file's upload: the tus.Upload instance,
+   * any events related to the file, and the Companion WebSocket connection.
+   *
+   * @param {string} fileID
+   */
+  ;
+
+  _proto.resetUploaderReferences = function resetUploaderReferences(fileID, opts) {
+    if (opts === void 0) {
+      opts = {};
+    }
+
+    if (this.uploaders[fileID]) {
+      var uploader = this.uploaders[fileID];
+      uploader.abort();
+
+      if (opts.abort) {
+        // to avoid 423 error from tus server, we wait
+        // to be sure the previous request has been aborted before terminating the upload
+        // @todo remove the timeout when this "wait" is handled in tus-js-client internally
+        setTimeout(function () {
+          return uploader.abort(true);
+        }, 1000);
+      }
+
+      this.uploaders[fileID] = null;
+    }
+
+    if (this.uploaderEvents[fileID]) {
+      this.uploaderEvents[fileID].remove();
+      this.uploaderEvents[fileID] = null;
+    }
+
+    if (this.uploaderSockets[fileID]) {
+      this.uploaderSockets[fileID].close();
+      this.uploaderSockets[fileID] = null;
+    }
+  }
+  /**
+   * Create a new Tus upload.
+   *
+   * A lot can happen during an upload, so this is quite hard to follow!
+   * - First, the upload is started. If the file was already paused by the time the upload starts, nothing should happen.
+   *   If the `limit` option is used, the upload must be queued onto the `this.requests` queue.
+   *   When an upload starts, we store the tus.Upload instance, and an EventTracker instance that manages the event listeners
+   *   for pausing, cancellation, removal, etc.
+   * - While the upload is in progress, it may be paused or cancelled.
+   *   Pausing aborts the underlying tus.Upload, and removes the upload from the `this.requests` queue. All other state is
+   *   maintained.
+   *   Cancelling removes the upload from the `this.requests` queue, and completely aborts the upload--the tus.Upload instance
+   *   is aborted and discarded, the EventTracker instance is destroyed (removing all listeners).
+   *   Resuming the upload uses the `this.requests` queue as well, to prevent selectively pausing and resuming uploads from
+   *   bypassing the limit.
+   * - After completing an upload, the tus.Upload and EventTracker instances are cleaned up, and the upload is marked as done
+   *   in the `this.requests` queue.
+   * - When an upload completed with an error, the same happens as on successful completion, but the `upload()` promise is rejected.
+   *
+   * When working on this function, keep in mind:
+   *  - When an upload is completed or cancelled for any reason, the tus.Upload and EventTracker instances need to be cleaned up using this.resetUploaderReferences().
+   *  - When an upload is cancelled or paused, for any reason, it needs to be removed from the `this.requests` queue using `queuedRequest.abort()`.
+   *  - When an upload is completed for any reason, including errors, it needs to be marked as such using `queuedRequest.done()`.
+   *  - When an upload is started or resumed, it needs to go through the `this.requests` queue. The `queuedRequest` variable must be updated so the other uses of it are valid.
+   *  - Before replacing the `queuedRequest` variable, the previous `queuedRequest` must be aborted, else it will keep taking up a spot in the queue.
+   *
+   * @param {UppyFile} file for use with upload
+   * @param {number} current file in a queue
+   * @param {number} total number of files in a queue
+   * @returns {Promise<void>}
+   */
+  ;
+
+  _proto.upload = function upload(file, current, total) {
+    var _this2 = this;
+
+    this.resetUploaderReferences(file.id); // Create a new tus upload
+
+    return new Promise(function (resolve, reject) {
+      _this2.uppy.emit('upload-started', file);
+
+      var optsTus = _extends({}, tusDefaultOptions, _this2.opts, // Install file-specific upload overrides.
+      file.tus || {}); // We override tus fingerprint to uppy’s `file.id`, since the `file.id`
+      // now also includes `relativePath` for files added from folders.
+      // This means you can add 2 identical files, if one is in folder a,
+      // the other in folder b.
+
+
+      optsTus.fingerprint = getFingerprint(file);
+
+      optsTus.onError = function (err) {
+        _this2.uppy.log(err);
+
+        _this2.uppy.emit('upload-error', file, err);
+
+        err.message = "Failed because: " + err.message;
+
+        _this2.resetUploaderReferences(file.id);
+
+        queuedRequest.done();
+        reject(err);
+      };
+
+      optsTus.onProgress = function (bytesUploaded, bytesTotal) {
+        _this2.onReceiveUploadUrl(file, upload.url);
+
+        _this2.uppy.emit('upload-progress', file, {
+          uploader: _this2,
+          bytesUploaded: bytesUploaded,
+          bytesTotal: bytesTotal
+        });
+      };
+
+      optsTus.onSuccess = function () {
+        var uploadResp = {
+          uploadURL: upload.url
+        };
+
+        _this2.uppy.emit('upload-success', file, uploadResp);
+
+        if (upload.url) {
+          _this2.uppy.log('Download ' + upload.file.name + ' from ' + upload.url);
+        }
+
+        _this2.resetUploaderReferences(file.id);
+
+        queuedRequest.done();
+        resolve(upload);
+      };
+
+      var copyProp = function copyProp(obj, srcProp, destProp) {
+        if (Object.prototype.hasOwnProperty.call(obj, srcProp) && !Object.prototype.hasOwnProperty.call(obj, destProp)) {
+          obj[destProp] = obj[srcProp];
+        }
+      };
+
+      var meta = {};
+      var metaFields = Array.isArray(optsTus.metaFields) ? optsTus.metaFields // Send along all fields by default.
+      : Object.keys(file.meta);
+      metaFields.forEach(function (item) {
+        meta[item] = file.meta[item];
+      }); // tusd uses metadata fields 'filetype' and 'filename'
+
+      copyProp(meta, 'type', 'filetype');
+      copyProp(meta, 'name', 'filename');
+      optsTus.metadata = meta;
+      var upload = new tus.Upload(file.data, optsTus);
+      _this2.uploaders[file.id] = upload;
+      _this2.uploaderEvents[file.id] = new EventTracker(_this2.uppy);
+
+      var queuedRequest = _this2.requests.run(function () {
+        if (!file.isPaused) {
+          upload.start();
+        } // Don't do anything here, the caller will take care of cancelling the upload itself
+        // using resetUploaderReferences(). This is because resetUploaderReferences() has to be
+        // called when this request is still in the queue, and has not been started yet, too. At
+        // that point this cancellation function is not going to be called.
+        // Also, we need to remove the request from the queue _without_ destroying everything
+        // related to this upload to handle pauses.
+
+
+        return function () {};
+      });
+
+      _this2.onFileRemove(file.id, function (targetFileID) {
+        queuedRequest.abort();
+
+        _this2.resetUploaderReferences(file.id, {
+          abort: !!upload.url
+        });
+
+        resolve("upload " + targetFileID + " was removed");
+      });
+
+      _this2.onPause(file.id, function (isPaused) {
+        if (isPaused) {
+          // Remove this file from the queue so another file can start in its place.
+          queuedRequest.abort();
+          upload.abort();
+        } else {
+          // Resuming an upload should be queued, else you could pause and then resume a queued upload to make it skip the queue.
+          queuedRequest.abort();
+          queuedRequest = _this2.requests.run(function () {
+            upload.start();
+            return function () {};
+          });
+        }
+      });
+
+      _this2.onPauseAll(file.id, function () {
+        queuedRequest.abort();
+        upload.abort();
+      });
+
+      _this2.onCancelAll(file.id, function () {
+        queuedRequest.abort();
+
+        _this2.resetUploaderReferences(file.id, {
+          abort: !!upload.url
+        });
+
+        resolve("upload " + file.id + " was canceled");
+      });
+
+      _this2.onResumeAll(file.id, function () {
+        queuedRequest.abort();
+
+        if (file.error) {
+          upload.abort();
+        }
+
+        queuedRequest = _this2.requests.run(function () {
+          upload.start();
+          return function () {};
+        });
+      });
+    }).catch(function (err) {
+      _this2.uppy.emit('upload-error', file, err);
+
+      throw err;
+    });
+  }
+  /**
+   * @param {UppyFile} file for use with upload
+   * @param {number} current file in a queue
+   * @param {number} total number of files in a queue
+   * @returns {Promise<void>}
+   */
+  ;
+
+  _proto.uploadRemote = function uploadRemote(file, current, total) {
+    var _this3 = this;
+
+    this.resetUploaderReferences(file.id);
+
+    var opts = _extends({}, this.opts);
+
+    if (file.tus) {
+      // Install file-specific upload overrides.
+      _extends(opts, file.tus);
+    }
+
+    this.uppy.emit('upload-started', file);
+    this.uppy.log(file.remote.url);
+
+    if (file.serverToken) {
+      return this.connectToServerSocket(file);
+    }
+
+    return new Promise(function (resolve, reject) {
+      var Client = file.remote.providerOptions.provider ? Provider : RequestClient;
+      var client = new Client(_this3.uppy, file.remote.providerOptions); // !! cancellation is NOT supported at this stage yet
+
+      client.post(file.remote.url, _extends({}, file.remote.body, {
+        endpoint: opts.endpoint,
+        uploadUrl: opts.uploadUrl,
+        protocol: 'tus',
+        size: file.data.size,
+        metadata: file.meta
+      })).then(function (res) {
+        _this3.uppy.setFileState(file.id, {
+          serverToken: res.token
+        });
+
+        file = _this3.uppy.getFile(file.id);
+        return _this3.connectToServerSocket(file);
+      }).then(function () {
+        resolve();
+      }).catch(function (err) {
+        _this3.uppy.emit('upload-error', file, err);
+
+        reject(err);
+      });
+    });
+  }
+  /**
+   * See the comment on the upload() method.
+   *
+   * Additionally, when an upload is removed, completed, or cancelled, we need to close the WebSocket connection. This is handled by the resetUploaderReferences() function, so the same guidelines apply as in upload().
+   *
+   * @param {UppyFile} file
+   */
+  ;
+
+  _proto.connectToServerSocket = function connectToServerSocket(file) {
+    var _this4 = this;
+
+    return new Promise(function (resolve, reject) {
+      var token = file.serverToken;
+      var host = getSocketHost(file.remote.companionUrl);
+      var socket = new Socket({
+        target: host + "/api/" + token,
+        autoOpen: false
+      });
+      _this4.uploaderSockets[file.id] = socket;
+      _this4.uploaderEvents[file.id] = new EventTracker(_this4.uppy);
+
+      _this4.onFileRemove(file.id, function () {
+        queuedRequest.abort(); // still send pause event in case we are dealing with older version of companion
+        // @todo don't send pause event in the next major release.
+
+        socket.send('pause', {});
+        socket.send('cancel', {});
+
+        _this4.resetUploaderReferences(file.id);
+
+        resolve("upload " + file.id + " was removed");
+      });
+
+      _this4.onPause(file.id, function (isPaused) {
+        if (isPaused) {
+          // Remove this file from the queue so another file can start in its place.
+          queuedRequest.abort();
+          socket.send('pause', {});
+        } else {
+          // Resuming an upload should be queued, else you could pause and then resume a queued upload to make it skip the queue.
+          queuedRequest.abort();
+          queuedRequest = _this4.requests.run(function () {
+            socket.send('resume', {});
+            return function () {};
+          });
+        }
+      });
+
+      _this4.onPauseAll(file.id, function () {
+        queuedRequest.abort();
+        socket.send('pause', {});
+      });
+
+      _this4.onCancelAll(file.id, function () {
+        queuedRequest.abort(); // still send pause event in case we are dealing with older version of companion
+        // @todo don't send pause event in the next major release.
+
+        socket.send('pause', {});
+        socket.send('cancel', {});
+
+        _this4.resetUploaderReferences(file.id);
+
+        resolve("upload " + file.id + " was canceled");
+      });
+
+      _this4.onResumeAll(file.id, function () {
+        queuedRequest.abort();
+
+        if (file.error) {
+          socket.send('pause', {});
+        }
+
+        queuedRequest = _this4.requests.run(function () {
+          socket.send('resume', {});
+          return function () {};
+        });
+      });
+
+      _this4.onRetry(file.id, function () {
+        // Only do the retry if the upload is actually in progress;
+        // else we could try to send these messages when the upload is still queued.
+        // We may need a better check for this since the socket may also be closed
+        // for other reasons, like network failures.
+        if (socket.isOpen) {
+          socket.send('pause', {});
+          socket.send('resume', {});
+        }
+      });
+
+      _this4.onRetryAll(file.id, function () {
+        // See the comment in the onRetry() call
+        if (socket.isOpen) {
+          socket.send('pause', {});
+          socket.send('resume', {});
+        }
+      });
+
+      socket.on('progress', function (progressData) {
+        return emitSocketProgress(_this4, progressData, file);
+      });
+      socket.on('error', function (errData) {
+        var message = errData.error.message;
+
+        var error = _extends(new Error(message), {
+          cause: errData.error
+        }); // If the remote retry optimisation should not be used,
+        // close the socket—this will tell companion to clear state and delete the file.
+
+
+        if (!_this4.opts.useFastRemoteRetry) {
+          _this4.resetUploaderReferences(file.id); // Remove the serverToken so that a new one will be created for the retry.
+
+
+          _this4.uppy.setFileState(file.id, {
+            serverToken: null
+          });
+        } else {
+          socket.close();
+        }
+
+        _this4.uppy.emit('upload-error', file, error);
+
+        queuedRequest.done();
+        reject(error);
+      });
+      socket.on('success', function (data) {
+        var uploadResp = {
+          uploadURL: data.url
+        };
+
+        _this4.uppy.emit('upload-success', file, uploadResp);
+
+        _this4.resetUploaderReferences(file.id);
+
+        queuedRequest.done();
+        resolve();
+      });
+
+      var queuedRequest = _this4.requests.run(function () {
+        socket.open();
+
+        if (file.isPaused) {
+          socket.send('pause', {});
+        } // Don't do anything here, the caller will take care of cancelling the upload itself
+        // using resetUploaderReferences(). This is because resetUploaderReferences() has to be
+        // called when this request is still in the queue, and has not been started yet, too. At
+        // that point this cancellation function is not going to be called.
+        // Also, we need to remove the request from the queue _without_ destroying everything
+        // related to this upload to handle pauses.
+
+
+        return function () {};
+      });
+    });
+  }
+  /**
+   * Store the uploadUrl on the file options, so that when Golden Retriever
+   * restores state, we will continue uploading to the correct URL.
+   *
+   * @param {UppyFile} file
+   * @param {string} uploadURL
+   */
+  ;
+
+  _proto.onReceiveUploadUrl = function onReceiveUploadUrl(file, uploadURL) {
+    var currentFile = this.uppy.getFile(file.id);
+    if (!currentFile) return; // Only do the update if we didn't have an upload URL yet.
+
+    if (!currentFile.tus || currentFile.tus.uploadUrl !== uploadURL) {
+      this.uppy.log('[Tus] Storing upload url');
+      this.uppy.setFileState(currentFile.id, {
+        tus: _extends({}, currentFile.tus, {
+          uploadUrl: uploadURL
+        })
+      });
+    }
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(string): void} cb
+   */
+  ;
+
+  _proto.onFileRemove = function onFileRemove(fileID, cb) {
+    this.uploaderEvents[fileID].on('file-removed', function (file) {
+      if (fileID === file.id) cb(file.id);
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(boolean): void} cb
+   */
+  ;
+
+  _proto.onPause = function onPause(fileID, cb) {
+    this.uploaderEvents[fileID].on('upload-pause', function (targetFileID, isPaused) {
+      if (fileID === targetFileID) {
+        // const isPaused = this.uppy.pauseResume(fileID)
+        cb(isPaused);
+      }
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(): void} cb
+   */
+  ;
+
+  _proto.onRetry = function onRetry(fileID, cb) {
+    this.uploaderEvents[fileID].on('upload-retry', function (targetFileID) {
+      if (fileID === targetFileID) {
+        cb();
+      }
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(): void} cb
+   */
+  ;
+
+  _proto.onRetryAll = function onRetryAll(fileID, cb) {
+    var _this5 = this;
+
+    this.uploaderEvents[fileID].on('retry-all', function (filesToRetry) {
+      if (!_this5.uppy.getFile(fileID)) return;
+      cb();
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(): void} cb
+   */
+  ;
+
+  _proto.onPauseAll = function onPauseAll(fileID, cb) {
+    var _this6 = this;
+
+    this.uploaderEvents[fileID].on('pause-all', function () {
+      if (!_this6.uppy.getFile(fileID)) return;
+      cb();
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(): void} cb
+   */
+  ;
+
+  _proto.onCancelAll = function onCancelAll(fileID, cb) {
+    var _this7 = this;
+
+    this.uploaderEvents[fileID].on('cancel-all', function () {
+      if (!_this7.uppy.getFile(fileID)) return;
+      cb();
+    });
+  }
+  /**
+   * @param {string} fileID
+   * @param {function(): void} cb
+   */
+  ;
+
+  _proto.onResumeAll = function onResumeAll(fileID, cb) {
+    var _this8 = this;
+
+    this.uploaderEvents[fileID].on('resume-all', function () {
+      if (!_this8.uppy.getFile(fileID)) return;
+      cb();
+    });
+  }
+  /**
+   * @param {(UppyFile | FailedUppyFile)[]} files
+   */
+  ;
+
+  _proto.uploadFiles = function uploadFiles(files) {
+    var _this9 = this;
+
+    var promises = files.map(function (file, i) {
+      var current = i + 1;
+      var total = files.length;
+
+      if ('error' in file && file.error) {
+        return Promise.reject(new Error(file.error));
+      } else if (file.isRemote) {
+        return _this9.uploadRemote(file, current, total);
+      } else {
+        return _this9.upload(file, current, total);
+      }
+    });
+    return settle(promises);
+  }
+  /**
+   * @param {string[]} fileIDs
+   */
+  ;
+
+  _proto.handleUpload = function handleUpload(fileIDs) {
+    var _this10 = this;
+
+    if (fileIDs.length === 0) {
+      this.uppy.log('[Tus] No files to upload');
+      return Promise.resolve();
+    }
+
+    if (this.opts.limit === 0) {
+      this.uppy.log('[Tus] When uploading multiple files at once, consider setting the `limit` option (to `10` for example), to limit the number of concurrent uploads, which helps prevent memory and network issues: https://uppy.io/docs/tus/#limit-0', 'warning');
+    }
+
+    this.uppy.log('[Tus] Uploading...');
+    var filesToUpload = fileIDs.map(function (fileID) {
+      return _this10.uppy.getFile(fileID);
+    });
+    return this.uploadFiles(filesToUpload).then(function () {
+      return null;
+    });
+  };
+
+  _proto.install = function install() {
+    this.uppy.setState({
+      capabilities: _extends({}, this.uppy.getState().capabilities, {
+        resumableUploads: true
+      })
+    });
+    this.uppy.addUploader(this.handleUpload);
+    this.uppy.on('reset-progress', this.handleResetProgress);
+
+    if (this.opts.autoRetry) {
+      this.uppy.on('back-online', this.uppy.retryAll);
+    }
+  };
+
+  _proto.uninstall = function uninstall() {
+    this.uppy.setState({
+      capabilities: _extends({}, this.uppy.getState().capabilities, {
+        resumableUploads: false
+      })
+    });
+    this.uppy.removeUploader(this.handleUpload);
+
+    if (this.opts.autoRetry) {
+      this.uppy.off('back-online', this.uppy.retryAll);
+    }
+  };
+
+  return Tus;
+}(Plugin), _class.VERSION = "1.5.10", _temp);
+},{"@uppy/core":"../node_modules/@uppy/core/lib/index.js","tus-js-client":"../node_modules/tus-js-client/lib.es5/index.js","@uppy/companion-client":"../node_modules/@uppy/companion-client/lib/index.js","@uppy/utils/lib/emitSocketProgress":"../node_modules/@uppy/utils/lib/emitSocketProgress.js","@uppy/utils/lib/getSocketHost":"../node_modules/@uppy/utils/lib/getSocketHost.js","@uppy/utils/lib/settle":"../node_modules/@uppy/utils/lib/settle.js","@uppy/utils/lib/EventTracker":"../node_modules/@uppy/utils/lib/EventTracker.js","@uppy/utils/lib/RateLimitedQueue":"../node_modules/@uppy/utils/lib/RateLimitedQueue.js","./getFingerprint":"../node_modules/@uppy/tus/lib/getFingerprint.js"}],"../node_modules/@uppy/url/lib/UrlUI.js":[function(require,module,exports) {
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+var _require = require('preact'),
+    h = _require.h,
+    Component = _require.Component;
+
+var UrlUI =
+/*#__PURE__*/
+function (_Component) {
+  _inheritsLoose(UrlUI, _Component);
+
+  function UrlUI(props) {
+    var _this;
+
+    _this = _Component.call(this, props) || this;
+    _this.handleKeyPress = _this.handleKeyPress.bind(_assertThisInitialized(_this));
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  var _proto = UrlUI.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    this.input.value = '';
+  };
+
+  _proto.handleKeyPress = function handleKeyPress(ev) {
+    if (ev.keyCode === 13) {
+      this.props.addFile(this.input.value);
+    }
+  };
+
+  _proto.handleClick = function handleClick() {
+    this.props.addFile(this.input.value);
+  };
+
+  _proto.render = function render() {
+    var _this2 = this;
+
+    return h("div", {
+      class: "uppy-Url"
+    }, h("input", {
+      class: "uppy-u-reset uppy-c-textInput uppy-Url-input",
+      type: "text",
+      "aria-label": this.props.i18n('enterUrlToImport'),
+      placeholder: this.props.i18n('enterUrlToImport'),
+      onkeyup: this.handleKeyPress,
+      ref: function ref(input) {
+        _this2.input = input;
+      },
+      "data-uppy-super-focusable": true
+    }), h("button", {
+      class: "uppy-u-reset uppy-c-btn uppy-c-btn-primary uppy-Url-importButton",
+      type: "button",
+      onclick: this.handleClick
+    }, this.props.i18n('import')));
+  };
+
+  return UrlUI;
+}(Component);
+
+module.exports = UrlUI;
+},{"preact":"../node_modules/preact/dist/preact.esm.js"}],"../node_modules/@uppy/utils/lib/toArray.js":[function(require,module,exports) {
+/**
+ * Converts list into array
+ */
+module.exports = function toArray(list) {
+  return Array.prototype.slice.call(list || [], 0);
+};
+},{}],"../node_modules/@uppy/url/lib/utils/forEachDroppedOrPastedUrl.js":[function(require,module,exports) {
+var toArray = require('@uppy/utils/lib/toArray');
+/*
+  SITUATION
+
+    1. Cross-browser dataTransfer.items
+
+      paste in chrome [Copy Image]:
+      0: {kind: "file", type: "image/png"}
+      1: {kind: "string", type: "text/html"}
+      paste in safari [Copy Image]:
+      0: {kind: "file", type: "image/png"}
+      1: {kind: "string", type: "text/html"}
+      2: {kind: "string", type: "text/plain"}
+      3: {kind: "string", type: "text/uri-list"}
+      paste in firefox [Copy Image]:
+      0: {kind: "file", type: "image/png"}
+      1: {kind: "string", type: "text/html"}
+
+      paste in chrome [Copy Image Address]:
+      0: {kind: "string", type: "text/plain"}
+      paste in safari [Copy Image Address]:
+      0: {kind: "string", type: "text/plain"}
+      1: {kind: "string", type: "text/uri-list"}
+      paste in firefox [Copy Image Address]:
+      0: {kind: "string", type: "text/plain"}
+
+      drop in chrome [from browser]:
+      0: {kind: "string", type: "text/uri-list"}
+      1: {kind: "string", type: "text/html"}
+      drop in safari [from browser]:
+      0: {kind: "string", type: "text/uri-list"}
+      1: {kind: "string", type: "text/html"}
+      2: {kind: "file", type: "image/png"}
+      drop in firefox [from browser]:
+      0: {kind: "string", type: "text/uri-list"}
+      1: {kind: "string", type: "text/x-moz-url"}
+      2: {kind: "string", type: "text/plain"}
+
+    2. We can determine if it's a 'copypaste' or a 'drop', but we can't discern between [Copy Image] and [Copy Image Address].
+
+  CONCLUSION
+
+    1. 'paste' ([Copy Image] or [Copy Image Address], we can't discern between these two)
+      Don't do anything if there is 'file' item. .handlePaste in the DashboardPlugin will deal with all 'file' items.
+      If there are no 'file' items - handle 'text/plain' items.
+
+    2. 'drop'
+      Take 'text/uri-list' items. Safari has an additional item of .kind === 'file', and you may worry about the item being duplicated (first by DashboardPlugin, and then by UrlPlugin, now), but don't. Directory handling code won't pay attention to this particular item of kind 'file'.
+*/
+
+/**
+ * Finds all links dropped/pasted from one browser window to another.
+ *
+ * @param {object} dataTransfer - DataTransfer instance, e.g. e.clipboardData, or e.dataTransfer
+ * @param {string} isDropOrPaste - either 'drop' or 'paste'
+ * @param {Function} callback - (urlString) => {}
+ */
+
+
+module.exports = function forEachDroppedOrPastedUrl(dataTransfer, isDropOrPaste, callback) {
+  var items = toArray(dataTransfer.items);
+  var urlItems;
+
+  switch (isDropOrPaste) {
+    case 'paste':
+      {
+        var atLeastOneFileIsDragged = items.some(function (item) {
+          return item.kind === 'file';
+        });
+
+        if (atLeastOneFileIsDragged) {
+          return;
+        } else {
+          urlItems = items.filter(function (item) {
+            return item.kind === 'string' && item.type === 'text/plain';
+          });
+        }
+
+        break;
+      }
+
+    case 'drop':
+      {
+        urlItems = items.filter(function (item) {
+          return item.kind === 'string' && item.type === 'text/uri-list';
+        });
+        break;
+      }
+
+    default:
+      {
+        throw new Error("isDropOrPaste must be either 'drop' or 'paste', but it's " + isDropOrPaste);
+      }
+  }
+
+  urlItems.forEach(function (item) {
+    item.getAsString(function (urlString) {
+      return callback(urlString);
+    });
+  });
+};
+},{"@uppy/utils/lib/toArray":"../node_modules/@uppy/utils/lib/toArray.js"}],"../node_modules/@uppy/url/lib/index.js":[function(require,module,exports) {
+var _class, _temp;
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+var _require = require('@uppy/core'),
+    Plugin = _require.Plugin;
+
+var Translator = require('@uppy/utils/lib/Translator');
+
+var _require2 = require('preact'),
+    h = _require2.h;
+
+var _require3 = require('@uppy/companion-client'),
+    RequestClient = _require3.RequestClient;
+
+var UrlUI = require('./UrlUI.js');
+
+var forEachDroppedOrPastedUrl = require('./utils/forEachDroppedOrPastedUrl');
+
+function UrlIcon() {
+  return h("svg", {
+    "aria-hidden": "true",
+    focusable: "false",
+    width: "23",
+    height: "23",
+    viewBox: "0 0 23 23"
+  }, h("path", {
+    d: "M20.485 11.236l-2.748 2.737c-.184.182-.367.365-.642.547-1.007.73-2.107 1.095-3.298 1.095-1.65 0-3.298-.73-4.398-2.19-.275-.365-.183-1.003.183-1.277.367-.273 1.008-.182 1.283.183 1.191 1.642 3.482 1.915 5.13.73a.714.714 0 0 0 .367-.365l2.75-2.737c1.373-1.46 1.373-3.74-.093-5.108a3.72 3.72 0 0 0-5.13 0L12.33 6.4a.888.888 0 0 1-1.283 0 .88.88 0 0 1 0-1.277l1.558-1.55a5.38 5.38 0 0 1 7.605 0c2.29 2.006 2.382 5.564.274 7.662zm-8.979 6.294L9.95 19.081a3.72 3.72 0 0 1-5.13 0c-1.467-1.368-1.467-3.74-.093-5.108l2.75-2.737.366-.365c.824-.547 1.74-.82 2.748-.73 1.008.183 1.833.639 2.382 1.46.275.365.917.456 1.283.182.367-.273.458-.912.183-1.277-.916-1.186-2.199-1.915-3.573-2.098-1.374-.273-2.84.091-4.031 1.004l-.55.547-2.749 2.737c-2.107 2.189-2.015 5.655.092 7.753C4.727 21.453 6.101 22 7.475 22c1.374 0 2.749-.547 3.848-1.55l1.558-1.551a.88.88 0 0 0 0-1.278c-.367-.364-1.008-.456-1.375-.09z",
+    fill: "#FF814F",
+    "fill-rule": "nonzero"
+  }));
+}
+/**
+ * Url
+ *
+ */
+
+
+module.exports = (_temp = _class =
+/*#__PURE__*/
+function (_Plugin) {
+  _inheritsLoose(Url, _Plugin);
+
+  function Url(uppy, opts) {
+    var _this;
+
+    _this = _Plugin.call(this, uppy, opts) || this;
+    _this.id = _this.opts.id || 'Url';
+    _this.title = _this.opts.title || 'Link';
+    _this.type = 'acquirer';
+
+    _this.icon = function () {
+      return h(UrlIcon, null);
+    }; // Set default options and locale
+
+
+    _this.defaultLocale = {
+      strings: {
+        import: 'Import',
+        enterUrlToImport: 'Enter URL to import a file',
+        failedToFetch: 'Companion failed to fetch this URL, please make sure it’s correct',
+        enterCorrectUrl: 'Incorrect URL: Please make sure you are entering a direct link to a file'
+      }
+    };
+    var defaultOptions = {};
+    _this.opts = _extends({}, defaultOptions, {}, opts);
+
+    _this.i18nInit();
+
+    _this.hostname = _this.opts.companionUrl;
+
+    if (!_this.hostname) {
+      throw new Error('Companion hostname is required, please consult https://uppy.io/docs/companion');
+    } // Bind all event handlers for referencability
+
+
+    _this.getMeta = _this.getMeta.bind(_assertThisInitialized(_this));
+    _this.addFile = _this.addFile.bind(_assertThisInitialized(_this));
+    _this.handleRootDrop = _this.handleRootDrop.bind(_assertThisInitialized(_this));
+    _this.handleRootPaste = _this.handleRootPaste.bind(_assertThisInitialized(_this));
+    _this.client = new RequestClient(uppy, {
+      companionUrl: _this.opts.companionUrl,
+      companionHeaders: _this.opts.companionHeaders || _this.opts.serverHeaders
+    });
+    return _this;
+  }
+
+  var _proto = Url.prototype;
+
+  _proto.setOptions = function setOptions(newOpts) {
+    _Plugin.prototype.setOptions.call(this, newOpts);
+
+    this.i18nInit();
+  };
+
+  _proto.i18nInit = function i18nInit() {
+    this.translator = new Translator([this.defaultLocale, this.uppy.locale, this.opts.locale]);
+    this.i18n = this.translator.translate.bind(this.translator);
+    this.i18nArray = this.translator.translateArray.bind(this.translator);
+    this.setPluginState(); // so that UI re-renders and we see the updated locale
+  };
+
+  _proto.getFileNameFromUrl = function getFileNameFromUrl(url) {
+    return url.substring(url.lastIndexOf('/') + 1);
+  };
+
+  _proto.checkIfCorrectURL = function checkIfCorrectURL(url) {
+    if (!url) return false;
+    var protocol = url.match(/^([a-z0-9]+):\/\//)[1];
+
+    if (protocol !== 'http' && protocol !== 'https') {
+      return false;
+    }
+
+    return true;
+  };
+
+  _proto.addProtocolToURL = function addProtocolToURL(url) {
+    var protocolRegex = /^[a-z0-9]+:\/\//;
+    var defaultProtocol = 'http://';
+
+    if (protocolRegex.test(url)) {
+      return url;
+    }
+
+    return defaultProtocol + url;
+  };
+
+  _proto.getMeta = function getMeta(url) {
+    var _this2 = this;
+
+    return this.client.post('url/meta', {
+      url: url
+    }).then(function (res) {
+      if (res.error) {
+        _this2.uppy.log('[URL] Error:');
+
+        _this2.uppy.log(res.error);
+
+        throw new Error('Failed to fetch the file');
+      }
+
+      return res;
+    });
+  };
+
+  _proto.addFile = function addFile(url) {
+    var _this3 = this;
+
+    url = this.addProtocolToURL(url);
+
+    if (!this.checkIfCorrectURL(url)) {
+      this.uppy.log("[URL] Incorrect URL entered: " + url);
+      this.uppy.info(this.i18n('enterCorrectUrl'), 'error', 4000);
+      return;
+    }
+
+    return this.getMeta(url).then(function (meta) {
+      var tagFile = {
+        source: _this3.id,
+        name: _this3.getFileNameFromUrl(url),
+        type: meta.type,
+        data: {
+          size: meta.size
+        },
+        isRemote: true,
+        body: {
+          url: url
+        },
+        remote: {
+          companionUrl: _this3.opts.companionUrl,
+          url: _this3.hostname + "/url/get",
+          body: {
+            fileId: url,
+            url: url
+          },
+          providerOptions: _this3.client.opts
+        }
+      };
+      return tagFile;
+    }).then(function (tagFile) {
+      _this3.uppy.log('[Url] Adding remote file');
+
+      try {
+        _this3.uppy.addFile(tagFile);
+      } catch (err) {
+        if (!err.isRestriction) {
+          _this3.uppy.log(err);
+        }
+      }
+    }).catch(function (err) {
+      _this3.uppy.log(err);
+
+      _this3.uppy.info({
+        message: _this3.i18n('failedToFetch'),
+        details: err
+      }, 'error', 4000);
+    });
+  };
+
+  _proto.handleRootDrop = function handleRootDrop(e) {
+    var _this4 = this;
+
+    forEachDroppedOrPastedUrl(e.dataTransfer, 'drop', function (url) {
+      _this4.uppy.log("[URL] Adding file from dropped url: " + url);
+
+      _this4.addFile(url);
+    });
+  };
+
+  _proto.handleRootPaste = function handleRootPaste(e) {
+    var _this5 = this;
+
+    forEachDroppedOrPastedUrl(e.clipboardData, 'paste', function (url) {
+      _this5.uppy.log("[URL] Adding file from pasted url: " + url);
+
+      _this5.addFile(url);
+    });
+  };
+
+  _proto.render = function render(state) {
+    return h(UrlUI, {
+      i18n: this.i18n,
+      addFile: this.addFile
+    });
+  };
+
+  _proto.install = function install() {
+    var target = this.opts.target;
+
+    if (target) {
+      this.mount(target, this);
+    }
+  };
+
+  _proto.uninstall = function uninstall() {
+    this.unmount();
+  };
+
+  return Url;
+}(Plugin), _class.VERSION = "1.4.1", _temp);
+},{"@uppy/core":"../node_modules/@uppy/core/lib/index.js","@uppy/utils/lib/Translator":"../node_modules/@uppy/utils/lib/Translator.js","preact":"../node_modules/preact/dist/preact.esm.js","@uppy/companion-client":"../node_modules/@uppy/companion-client/lib/index.js","./UrlUI.js":"../node_modules/@uppy/url/lib/UrlUI.js","./utils/forEachDroppedOrPastedUrl":"../node_modules/@uppy/url/lib/utils/forEachDroppedOrPastedUrl.js"}],"../node_modules/classnames/index.js":[function(require,module,exports) {
 var define;
 /*!
   Copyright (c) 2017 Jed Watson.
@@ -36320,14 +40511,7 @@ module.exports = function findAllDOMElements(element) {
     return [element];
   }
 };
-},{"./isDOMElement":"../node_modules/@uppy/utils/lib/isDOMElement.js"}],"../node_modules/@uppy/utils/lib/toArray.js":[function(require,module,exports) {
-/**
- * Converts list into array
- */
-module.exports = function toArray(list) {
-  return Array.prototype.slice.call(list || [], 0);
-};
-},{}],"../node_modules/@uppy/utils/lib/getDroppedFiles/utils/webkitGetAsEntryApi/getRelativePath.js":[function(require,module,exports) {
+},{"./isDOMElement":"../node_modules/@uppy/utils/lib/isDOMElement.js"}],"../node_modules/@uppy/utils/lib/getDroppedFiles/utils/webkitGetAsEntryApi/getRelativePath.js":[function(require,module,exports) {
 /**
  * Get the relative path from the FileEntry#fullPath, because File#webkitRelativePath is always '', at least onDrop.
  *
@@ -40961,1552 +45145,7 @@ var _ProgressBar = _interopRequireDefault(require("./lib/ProgressBar"));
 var _StatusBar = _interopRequireDefault(require("./lib/StatusBar"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./lib/Dashboard":"../node_modules/@uppy/react/lib/Dashboard.js","./lib/DashboardModal":"../node_modules/@uppy/react/lib/DashboardModal.js","./lib/DragDrop":"../node_modules/@uppy/react/lib/DragDrop.js","./lib/ProgressBar":"../node_modules/@uppy/react/lib/ProgressBar.js","./lib/StatusBar":"../node_modules/@uppy/react/lib/StatusBar.js"}],"../node_modules/@uppy/companion-client/lib/AuthError.js":[function(require,module,exports) {
-'use strict';
-
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
-
-function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
-
-function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-var AuthError =
-/*#__PURE__*/
-function (_Error) {
-  _inheritsLoose(AuthError, _Error);
-
-  function AuthError() {
-    var _this;
-
-    _this = _Error.call(this, 'Authorization required') || this;
-    _this.name = 'AuthError';
-    _this.isAuthError = true;
-    return _this;
-  }
-
-  return AuthError;
-}(_wrapNativeSuper(Error));
-
-module.exports = AuthError;
-},{}],"../node_modules/@uppy/companion-client/lib/RequestClient.js":[function(require,module,exports) {
-'use strict';
-
-var _class, _temp;
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var AuthError = require('./AuthError'); // Remove the trailing slash so we can always safely append /xyz.
-
-
-function stripSlash(url) {
-  return url.replace(/\/$/, '');
-}
-
-module.exports = (_temp = _class =
-/*#__PURE__*/
-function () {
-  function RequestClient(uppy, opts) {
-    this.uppy = uppy;
-    this.opts = opts;
-    this.onReceiveResponse = this.onReceiveResponse.bind(this);
-    this.allowedHeaders = ['accept', 'content-type', 'uppy-auth-token'];
-    this.preflightDone = false;
-  }
-
-  var _proto = RequestClient.prototype;
-
-  _proto.headers = function headers() {
-    var userHeaders = this.opts.companionHeaders || this.opts.serverHeaders || {};
-    return Promise.resolve(_extends({}, this.defaultHeaders, {}, userHeaders));
-  };
-
-  _proto._getPostResponseFunc = function _getPostResponseFunc(skip) {
-    var _this = this;
-
-    return function (response) {
-      if (!skip) {
-        return _this.onReceiveResponse(response);
-      }
-
-      return response;
-    };
-  };
-
-  _proto.onReceiveResponse = function onReceiveResponse(response) {
-    var state = this.uppy.getState();
-    var companion = state.companion || {};
-    var host = this.opts.companionUrl;
-    var headers = response.headers; // Store the self-identified domain name for the Companion instance we just hit.
-
-    if (headers.has('i-am') && headers.get('i-am') !== companion[host]) {
-      var _extends2;
-
-      this.uppy.setState({
-        companion: _extends({}, companion, (_extends2 = {}, _extends2[host] = headers.get('i-am'), _extends2))
-      });
-    }
-
-    return response;
-  };
-
-  _proto._getUrl = function _getUrl(url) {
-    if (/^(https?:|)\/\//.test(url)) {
-      return url;
-    }
-
-    return this.hostname + "/" + url;
-  };
-
-  _proto._json = function _json(res) {
-    if (res.status === 401) {
-      throw new AuthError();
-    }
-
-    if (res.status < 200 || res.status > 300) {
-      var errMsg = "Failed request with status: " + res.status + ". " + res.statusText;
-      return res.json().then(function (errData) {
-        errMsg = errData.message ? errMsg + " message: " + errData.message : errMsg;
-        errMsg = errData.requestId ? errMsg + " request-Id: " + errData.requestId : errMsg;
-        throw new Error(errMsg);
-      }).catch(function () {
-        throw new Error(errMsg);
-      });
-    }
-
-    return res.json();
-  };
-
-  _proto.preflight = function preflight(path) {
-    var _this2 = this;
-
-    return new Promise(function (resolve, reject) {
-      if (_this2.preflightDone) {
-        return resolve(_this2.allowedHeaders.slice());
-      }
-
-      fetch(_this2._getUrl(path), {
-        method: 'OPTIONS'
-      }).then(function (response) {
-        if (response.headers.has('access-control-allow-headers')) {
-          _this2.allowedHeaders = response.headers.get('access-control-allow-headers').split(',').map(function (headerName) {
-            return headerName.trim().toLowerCase();
-          });
-        }
-
-        _this2.preflightDone = true;
-        resolve(_this2.allowedHeaders.slice());
-      }).catch(function (err) {
-        _this2.uppy.log("[CompanionClient] unable to make preflight request " + err, 'warning');
-
-        _this2.preflightDone = true;
-        resolve(_this2.allowedHeaders.slice());
-      });
-    });
-  };
-
-  _proto.preflightAndHeaders = function preflightAndHeaders(path) {
-    var _this3 = this;
-
-    return Promise.all([this.preflight(path), this.headers()]).then(function (_ref) {
-      var allowedHeaders = _ref[0],
-          headers = _ref[1];
-      // filter to keep only allowed Headers
-      Object.keys(headers).forEach(function (header) {
-        if (allowedHeaders.indexOf(header.toLowerCase()) === -1) {
-          _this3.uppy.log("[CompanionClient] excluding unallowed header " + header);
-
-          delete headers[header];
-        }
-      });
-      return headers;
-    });
-  };
-
-  _proto.get = function get(path, skipPostResponse) {
-    var _this4 = this;
-
-    return new Promise(function (resolve, reject) {
-      _this4.preflightAndHeaders(path).then(function (headers) {
-        fetch(_this4._getUrl(path), {
-          method: 'get',
-          headers: headers,
-          credentials: 'same-origin'
-        }).then(_this4._getPostResponseFunc(skipPostResponse)).then(function (res) {
-          return _this4._json(res).then(resolve);
-        }).catch(function (err) {
-          err = err.isAuthError ? err : new Error("Could not get " + _this4._getUrl(path) + ". " + err);
-          reject(err);
-        });
-      }).catch(reject);
-    });
-  };
-
-  _proto.post = function post(path, data, skipPostResponse) {
-    var _this5 = this;
-
-    return new Promise(function (resolve, reject) {
-      _this5.preflightAndHeaders(path).then(function (headers) {
-        fetch(_this5._getUrl(path), {
-          method: 'post',
-          headers: headers,
-          credentials: 'same-origin',
-          body: JSON.stringify(data)
-        }).then(_this5._getPostResponseFunc(skipPostResponse)).then(function (res) {
-          return _this5._json(res).then(resolve);
-        }).catch(function (err) {
-          err = err.isAuthError ? err : new Error("Could not post " + _this5._getUrl(path) + ". " + err);
-          reject(err);
-        });
-      }).catch(reject);
-    });
-  };
-
-  _proto.delete = function _delete(path, data, skipPostResponse) {
-    var _this6 = this;
-
-    return new Promise(function (resolve, reject) {
-      _this6.preflightAndHeaders(path).then(function (headers) {
-        fetch(_this6.hostname + "/" + path, {
-          method: 'delete',
-          headers: headers,
-          credentials: 'same-origin',
-          body: data ? JSON.stringify(data) : null
-        }).then(_this6._getPostResponseFunc(skipPostResponse)).then(function (res) {
-          return _this6._json(res).then(resolve);
-        }).catch(function (err) {
-          err = err.isAuthError ? err : new Error("Could not delete " + _this6._getUrl(path) + ". " + err);
-          reject(err);
-        });
-      }).catch(reject);
-    });
-  };
-
-  _createClass(RequestClient, [{
-    key: "hostname",
-    get: function get() {
-      var _this$uppy$getState = this.uppy.getState(),
-          companion = _this$uppy$getState.companion;
-
-      var host = this.opts.companionUrl;
-      return stripSlash(companion && companion[host] ? companion[host] : host);
-    }
-  }, {
-    key: "defaultHeaders",
-    get: function get() {
-      return {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Uppy-Versions': "@uppy/companion-client=" + RequestClient.VERSION
-      };
-    }
-  }]);
-
-  return RequestClient;
-}(), _class.VERSION = "1.4.2", _temp);
-},{"./AuthError":"../node_modules/@uppy/companion-client/lib/AuthError.js"}],"../node_modules/@uppy/companion-client/lib/tokenStorage.js":[function(require,module,exports) {
-'use strict';
-/**
- * This module serves as an Async wrapper for LocalStorage
- */
-
-module.exports.setItem = function (key, value) {
-  return new Promise(function (resolve) {
-    localStorage.setItem(key, value);
-    resolve();
-  });
-};
-
-module.exports.getItem = function (key) {
-  return Promise.resolve(localStorage.getItem(key));
-};
-
-module.exports.removeItem = function (key) {
-  return new Promise(function (resolve) {
-    localStorage.removeItem(key);
-    resolve();
-  });
-};
-},{}],"../node_modules/@uppy/companion-client/lib/Provider.js":[function(require,module,exports) {
-'use strict';
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-var RequestClient = require('./RequestClient');
-
-var tokenStorage = require('./tokenStorage');
-
-var _getName = function _getName(id) {
-  return id.split('-').map(function (s) {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }).join(' ');
-};
-
-module.exports =
-/*#__PURE__*/
-function (_RequestClient) {
-  _inheritsLoose(Provider, _RequestClient);
-
-  function Provider(uppy, opts) {
-    var _this;
-
-    _this = _RequestClient.call(this, uppy, opts) || this;
-    _this.provider = opts.provider;
-    _this.id = _this.provider;
-    _this.authProvider = opts.authProvider || _this.provider;
-    _this.name = _this.opts.name || _getName(_this.id);
-    _this.pluginId = _this.opts.pluginId;
-    _this.tokenKey = "companion-" + _this.pluginId + "-auth-token";
-    return _this;
-  }
-
-  var _proto = Provider.prototype;
-
-  _proto.headers = function headers() {
-    var _this2 = this;
-
-    return new Promise(function (resolve, reject) {
-      _RequestClient.prototype.headers.call(_this2).then(function (headers) {
-        _this2.getAuthToken().then(function (token) {
-          resolve(_extends({}, headers, {
-            'uppy-auth-token': token
-          }));
-        });
-      }).catch(reject);
-    });
-  };
-
-  _proto.onReceiveResponse = function onReceiveResponse(response) {
-    response = _RequestClient.prototype.onReceiveResponse.call(this, response);
-    var plugin = this.uppy.getPlugin(this.pluginId);
-    var oldAuthenticated = plugin.getPluginState().authenticated;
-    var authenticated = oldAuthenticated ? response.status !== 401 : response.status < 400;
-    plugin.setPluginState({
-      authenticated: authenticated
-    });
-    return response;
-  } // @todo(i.olarewaju) consider whether or not this method should be exposed
-  ;
-
-  _proto.setAuthToken = function setAuthToken(token) {
-    return this.uppy.getPlugin(this.pluginId).storage.setItem(this.tokenKey, token);
-  };
-
-  _proto.getAuthToken = function getAuthToken() {
-    return this.uppy.getPlugin(this.pluginId).storage.getItem(this.tokenKey);
-  };
-
-  _proto.authUrl = function authUrl() {
-    return this.hostname + "/" + this.id + "/connect";
-  };
-
-  _proto.fileUrl = function fileUrl(id) {
-    return this.hostname + "/" + this.id + "/get/" + id;
-  };
-
-  _proto.list = function list(directory) {
-    return this.get(this.id + "/list/" + (directory || ''));
-  };
-
-  _proto.logout = function logout() {
-    var _this3 = this;
-
-    return new Promise(function (resolve, reject) {
-      _this3.get(_this3.id + "/logout").then(function (res) {
-        _this3.uppy.getPlugin(_this3.pluginId).storage.removeItem(_this3.tokenKey).then(function () {
-          return resolve(res);
-        }).catch(reject);
-      }).catch(reject);
-    });
-  };
-
-  Provider.initPlugin = function initPlugin(plugin, opts, defaultOpts) {
-    plugin.type = 'acquirer';
-    plugin.files = [];
-
-    if (defaultOpts) {
-      plugin.opts = _extends({}, defaultOpts, opts);
-    }
-
-    if (opts.serverUrl || opts.serverPattern) {
-      throw new Error('`serverUrl` and `serverPattern` have been renamed to `companionUrl` and `companionAllowedHosts` respectively in the 0.30.5 release. Please consult the docs (for example, https://uppy.io/docs/instagram/ for the Instagram plugin) and use the updated options.`');
-    }
-
-    if (opts.companionAllowedHosts) {
-      var pattern = opts.companionAllowedHosts; // validate companionAllowedHosts param
-
-      if (typeof pattern !== 'string' && !Array.isArray(pattern) && !(pattern instanceof RegExp)) {
-        throw new TypeError(plugin.id + ": the option \"companionAllowedHosts\" must be one of string, Array, RegExp");
-      }
-
-      plugin.opts.companionAllowedHosts = pattern;
-    } else {
-      // does not start with https://
-      if (/^(?!https?:\/\/).*$/i.test(opts.companionUrl)) {
-        plugin.opts.companionAllowedHosts = "https://" + opts.companionUrl.replace(/^\/\//, '');
-      } else {
-        plugin.opts.companionAllowedHosts = opts.companionUrl;
-      }
-    }
-
-    plugin.storage = plugin.opts.storage || tokenStorage;
-  };
-
-  return Provider;
-}(RequestClient);
-},{"./RequestClient":"../node_modules/@uppy/companion-client/lib/RequestClient.js","./tokenStorage":"../node_modules/@uppy/companion-client/lib/tokenStorage.js"}],"../node_modules/@uppy/companion-client/lib/Socket.js":[function(require,module,exports) {
-var ee = require('namespace-emitter');
-
-module.exports =
-/*#__PURE__*/
-function () {
-  function UppySocket(opts) {
-    this.opts = opts;
-    this._queued = [];
-    this.isOpen = false;
-    this.emitter = ee();
-    this._handleMessage = this._handleMessage.bind(this);
-    this.close = this.close.bind(this);
-    this.emit = this.emit.bind(this);
-    this.on = this.on.bind(this);
-    this.once = this.once.bind(this);
-    this.send = this.send.bind(this);
-
-    if (!opts || opts.autoOpen !== false) {
-      this.open();
-    }
-  }
-
-  var _proto = UppySocket.prototype;
-
-  _proto.open = function open() {
-    var _this = this;
-
-    this.socket = new WebSocket(this.opts.target);
-
-    this.socket.onopen = function (e) {
-      _this.isOpen = true;
-
-      while (_this._queued.length > 0 && _this.isOpen) {
-        var first = _this._queued[0];
-
-        _this.send(first.action, first.payload);
-
-        _this._queued = _this._queued.slice(1);
-      }
-    };
-
-    this.socket.onclose = function (e) {
-      _this.isOpen = false;
-    };
-
-    this.socket.onmessage = this._handleMessage;
-  };
-
-  _proto.close = function close() {
-    if (this.socket) {
-      this.socket.close();
-    }
-  };
-
-  _proto.send = function send(action, payload) {
-    // attach uuid
-    if (!this.isOpen) {
-      this._queued.push({
-        action: action,
-        payload: payload
-      });
-
-      return;
-    }
-
-    this.socket.send(JSON.stringify({
-      action: action,
-      payload: payload
-    }));
-  };
-
-  _proto.on = function on(action, handler) {
-    this.emitter.on(action, handler);
-  };
-
-  _proto.emit = function emit(action, payload) {
-    this.emitter.emit(action, payload);
-  };
-
-  _proto.once = function once(action, handler) {
-    this.emitter.once(action, handler);
-  };
-
-  _proto._handleMessage = function _handleMessage(e) {
-    try {
-      var message = JSON.parse(e.data);
-      this.emit(message.action, message.payload);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  return UppySocket;
-}();
-},{"namespace-emitter":"../node_modules/namespace-emitter/index.js"}],"../node_modules/@uppy/companion-client/lib/index.js":[function(require,module,exports) {
-'use strict';
-/**
- * Manages communications with Companion
- */
-
-var RequestClient = require('./RequestClient');
-
-var Provider = require('./Provider');
-
-var Socket = require('./Socket');
-
-module.exports = {
-  RequestClient: RequestClient,
-  Provider: Provider,
-  Socket: Socket
-};
-},{"./RequestClient":"../node_modules/@uppy/companion-client/lib/RequestClient.js","./Provider":"../node_modules/@uppy/companion-client/lib/Provider.js","./Socket":"../node_modules/@uppy/companion-client/lib/Socket.js"}],"../node_modules/@uppy/utils/lib/emitSocketProgress.js":[function(require,module,exports) {
-var throttle = require('lodash.throttle');
-
-function _emitSocketProgress(uploader, progressData, file) {
-  var progress = progressData.progress,
-      bytesUploaded = progressData.bytesUploaded,
-      bytesTotal = progressData.bytesTotal;
-
-  if (progress) {
-    uploader.uppy.log("Upload progress: " + progress);
-    uploader.uppy.emit('upload-progress', file, {
-      uploader: uploader,
-      bytesUploaded: bytesUploaded,
-      bytesTotal: bytesTotal
-    });
-  }
-}
-
-module.exports = throttle(_emitSocketProgress, 300, {
-  leading: true,
-  trailing: true
-});
-},{"lodash.throttle":"../node_modules/lodash.throttle/index.js"}],"../node_modules/@uppy/utils/lib/getSocketHost.js":[function(require,module,exports) {
-module.exports = function getSocketHost(url) {
-  // get the host domain
-  var regex = /^(?:https?:\/\/|\/\/)?(?:[^@\n]+@)?(?:www\.)?([^\n]+)/i;
-  var host = regex.exec(url)[1];
-  var socketProtocol = /^http:\/\//i.test(url) ? 'ws' : 'wss';
-  return socketProtocol + "://" + host;
-};
-},{}],"../node_modules/@uppy/utils/lib/settle.js":[function(require,module,exports) {
-module.exports = function settle(promises) {
-  var resolutions = [];
-  var rejections = [];
-
-  function resolved(value) {
-    resolutions.push(value);
-  }
-
-  function rejected(error) {
-    rejections.push(error);
-  }
-
-  var wait = Promise.all(promises.map(function (promise) {
-    return promise.then(resolved, rejected);
-  }));
-  return wait.then(function () {
-    return {
-      successful: resolutions,
-      failed: rejections
-    };
-  });
-};
-},{}],"../node_modules/@uppy/utils/lib/EventTracker.js":[function(require,module,exports) {
-/**
- * Create a wrapper around an event emitter with a `remove` method to remove
- * all events that were added using the wrapped emitter.
- */
-module.exports =
-/*#__PURE__*/
-function () {
-  function EventTracker(emitter) {
-    this._events = [];
-    this._emitter = emitter;
-  }
-
-  var _proto = EventTracker.prototype;
-
-  _proto.on = function on(event, fn) {
-    this._events.push([event, fn]);
-
-    return this._emitter.on(event, fn);
-  };
-
-  _proto.remove = function remove() {
-    var _this = this;
-
-    this._events.forEach(function (_ref) {
-      var event = _ref[0],
-          fn = _ref[1];
-
-      _this._emitter.off(event, fn);
-    });
-  };
-
-  return EventTracker;
-}();
-},{}],"../node_modules/@uppy/utils/lib/ProgressTimeout.js":[function(require,module,exports) {
-/**
- * Helper to abort upload requests if there has not been any progress for `timeout` ms.
- * Create an instance using `timer = new ProgressTimeout(10000, onTimeout)`
- * Call `timer.progress()` to signal that there has been progress of any kind.
- * Call `timer.done()` when the upload has completed.
- */
-var ProgressTimeout =
-/*#__PURE__*/
-function () {
-  function ProgressTimeout(timeout, timeoutHandler) {
-    this._timeout = timeout;
-    this._onTimedOut = timeoutHandler;
-    this._isDone = false;
-    this._aliveTimer = null;
-    this._onTimedOut = this._onTimedOut.bind(this);
-  }
-
-  var _proto = ProgressTimeout.prototype;
-
-  _proto.progress = function progress() {
-    // Some browsers fire another progress event when the upload is
-    // cancelled, so we have to ignore progress after the timer was
-    // told to stop.
-    if (this._isDone) return;
-
-    if (this._timeout > 0) {
-      if (this._aliveTimer) clearTimeout(this._aliveTimer);
-      this._aliveTimer = setTimeout(this._onTimedOut, this._timeout);
-    }
-  };
-
-  _proto.done = function done() {
-    if (this._aliveTimer) {
-      clearTimeout(this._aliveTimer);
-      this._aliveTimer = null;
-    }
-
-    this._isDone = true;
-  };
-
-  return ProgressTimeout;
-}();
-
-module.exports = ProgressTimeout;
-},{}],"../node_modules/@uppy/utils/lib/RateLimitedQueue.js":[function(require,module,exports) {
-/**
- * Array.prototype.findIndex ponyfill for old browsers.
- */
-function findIndex(array, predicate) {
-  for (var i = 0; i < array.length; i++) {
-    if (predicate(array[i])) return i;
-  }
-
-  return -1;
-}
-
-function createCancelError() {
-  return new Error('Cancelled');
-}
-
-module.exports =
-/*#__PURE__*/
-function () {
-  function RateLimitedQueue(limit) {
-    if (typeof limit !== 'number' || limit === 0) {
-      this.limit = Infinity;
-    } else {
-      this.limit = limit;
-    }
-
-    this.activeRequests = 0;
-    this.queuedHandlers = [];
-  }
-
-  var _proto = RateLimitedQueue.prototype;
-
-  _proto._call = function _call(fn) {
-    var _this = this;
-
-    this.activeRequests += 1;
-    var _done = false;
-    var cancelActive;
-
-    try {
-      cancelActive = fn();
-    } catch (err) {
-      this.activeRequests -= 1;
-      throw err;
-    }
-
-    return {
-      abort: function abort() {
-        if (_done) return;
-        _done = true;
-        _this.activeRequests -= 1;
-        cancelActive();
-
-        _this._queueNext();
-      },
-      done: function done() {
-        if (_done) return;
-        _done = true;
-        _this.activeRequests -= 1;
-
-        _this._queueNext();
-      }
-    };
-  };
-
-  _proto._queueNext = function _queueNext() {
-    var _this2 = this;
-
-    // Do it soon but not immediately, this allows clearing out the entire queue synchronously
-    // one by one without continuously _advancing_ it (and starting new tasks before immediately
-    // aborting them)
-    Promise.resolve().then(function () {
-      _this2._next();
-    });
-  };
-
-  _proto._next = function _next() {
-    if (this.activeRequests >= this.limit) {
-      return;
-    }
-
-    if (this.queuedHandlers.length === 0) {
-      return;
-    } // Dispatch the next request, and update the abort/done handlers
-    // so that cancelling it does the Right Thing (and doesn't just try
-    // to dequeue an already-running request).
-
-
-    var next = this.queuedHandlers.shift();
-
-    var handler = this._call(next.fn);
-
-    next.abort = handler.abort;
-    next.done = handler.done;
-  };
-
-  _proto._queue = function _queue(fn, options) {
-    var _this3 = this;
-
-    if (options === void 0) {
-      options = {};
-    }
-
-    var handler = {
-      fn: fn,
-      priority: options.priority || 0,
-      abort: function abort() {
-        _this3._dequeue(handler);
-      },
-      done: function done() {
-        throw new Error('Cannot mark a queued request as done: this indicates a bug');
-      }
-    };
-    var index = findIndex(this.queuedHandlers, function (other) {
-      return handler.priority > other.priority;
-    });
-
-    if (index === -1) {
-      this.queuedHandlers.push(handler);
-    } else {
-      this.queuedHandlers.splice(index, 0, handler);
-    }
-
-    return handler;
-  };
-
-  _proto._dequeue = function _dequeue(handler) {
-    var index = this.queuedHandlers.indexOf(handler);
-
-    if (index !== -1) {
-      this.queuedHandlers.splice(index, 1);
-    }
-  };
-
-  _proto.run = function run(fn, queueOptions) {
-    if (this.activeRequests < this.limit) {
-      return this._call(fn);
-    }
-
-    return this._queue(fn, queueOptions);
-  };
-
-  _proto.wrapPromiseFunction = function wrapPromiseFunction(fn, queueOptions) {
-    var _this4 = this;
-
-    return function () {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      var queuedRequest;
-      var outerPromise = new Promise(function (resolve, reject) {
-        queuedRequest = _this4.run(function () {
-          var cancelError;
-          var innerPromise;
-
-          try {
-            innerPromise = Promise.resolve(fn.apply(void 0, args));
-          } catch (err) {
-            innerPromise = Promise.reject(err);
-          }
-
-          innerPromise.then(function (result) {
-            if (cancelError) {
-              reject(cancelError);
-            } else {
-              queuedRequest.done();
-              resolve(result);
-            }
-          }, function (err) {
-            if (cancelError) {
-              reject(cancelError);
-            } else {
-              queuedRequest.done();
-              reject(err);
-            }
-          });
-          return function () {
-            cancelError = createCancelError();
-          };
-        }, queueOptions);
-      });
-
-      outerPromise.abort = function () {
-        queuedRequest.abort();
-      };
-
-      return outerPromise;
-    };
-  };
-
-  return RateLimitedQueue;
-}();
-},{}],"../node_modules/@uppy/xhr-upload/lib/index.js":[function(require,module,exports) {
-var _class, _temp;
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-var _require = require('@uppy/core'),
-    Plugin = _require.Plugin;
-
-var cuid = require('cuid');
-
-var Translator = require('@uppy/utils/lib/Translator');
-
-var _require2 = require('@uppy/companion-client'),
-    Provider = _require2.Provider,
-    RequestClient = _require2.RequestClient,
-    Socket = _require2.Socket;
-
-var emitSocketProgress = require('@uppy/utils/lib/emitSocketProgress');
-
-var getSocketHost = require('@uppy/utils/lib/getSocketHost');
-
-var settle = require('@uppy/utils/lib/settle');
-
-var EventTracker = require('@uppy/utils/lib/EventTracker');
-
-var ProgressTimeout = require('@uppy/utils/lib/ProgressTimeout');
-
-var RateLimitedQueue = require('@uppy/utils/lib/RateLimitedQueue');
-
-function buildResponseError(xhr, error) {
-  // No error message
-  if (!error) error = new Error('Upload error'); // Got an error message string
-
-  if (typeof error === 'string') error = new Error(error); // Got something else
-
-  if (!(error instanceof Error)) {
-    error = _extends(new Error('Upload error'), {
-      data: error
-    });
-  }
-
-  error.request = xhr;
-  return error;
-}
-/**
- * Set `data.type` in the blob to `file.meta.type`,
- * because we might have detected a more accurate file type in Uppy
- * https://stackoverflow.com/a/50875615
- *
- * @param {object} file File object with `data`, `size` and `meta` properties
- * @returns {object} blob updated with the new `type` set from `file.meta.type`
- */
-
-
-function setTypeInBlob(file) {
-  var dataWithUpdatedType = file.data.slice(0, file.data.size, file.meta.type);
-  return dataWithUpdatedType;
-}
-
-module.exports = (_temp = _class =
-/*#__PURE__*/
-function (_Plugin) {
-  _inheritsLoose(XHRUpload, _Plugin);
-
-  function XHRUpload(uppy, opts) {
-    var _this;
-
-    _this = _Plugin.call(this, uppy, opts) || this;
-    _this.type = 'uploader';
-    _this.id = _this.opts.id || 'XHRUpload';
-    _this.title = 'XHRUpload';
-    _this.defaultLocale = {
-      strings: {
-        timedOut: 'Upload stalled for %{seconds} seconds, aborting.'
-      }
-    }; // Default options
-
-    var defaultOptions = {
-      formData: true,
-      fieldName: 'files[]',
-      method: 'post',
-      metaFields: null,
-      responseUrlFieldName: 'url',
-      bundle: false,
-      headers: {},
-      timeout: 30 * 1000,
-      limit: 0,
-      withCredentials: false,
-      responseType: '',
-
-      /**
-       * @typedef respObj
-       * @property {string} responseText
-       * @property {number} status
-       * @property {string} statusText
-       * @property {object.<string, string>} headers
-       *
-       * @param {string} responseText the response body string
-       * @param {XMLHttpRequest | respObj} response the response object (XHR or similar)
-       */
-      getResponseData: function getResponseData(responseText, response) {
-        var parsedResponse = {};
-
-        try {
-          parsedResponse = JSON.parse(responseText);
-        } catch (err) {
-          console.log(err);
-        }
-
-        return parsedResponse;
-      },
-
-      /**
-       *
-       * @param {string} responseText the response body string
-       * @param {XMLHttpRequest | respObj} response the response object (XHR or similar)
-       */
-      getResponseError: function getResponseError(responseText, response) {
-        return new Error('Upload error');
-      },
-
-      /**
-       * Check if the response from the upload endpoint indicates that the upload was successful.
-       *
-       * @param {number} status the response status code
-       * @param {string} responseText the response body string
-       * @param {XMLHttpRequest | respObj} response the response object (XHR or similar)
-       */
-      validateStatus: function validateStatus(status, responseText, response) {
-        return status >= 200 && status < 300;
-      }
-    };
-    _this.opts = _extends({}, defaultOptions, {}, opts);
-
-    _this.i18nInit();
-
-    _this.handleUpload = _this.handleUpload.bind(_assertThisInitialized(_this)); // Simultaneous upload limiting is shared across all uploads with this plugin.
-    // __queue is for internal Uppy use only!
-
-    if (_this.opts.__queue instanceof RateLimitedQueue) {
-      _this.requests = _this.opts.__queue;
-    } else {
-      _this.requests = new RateLimitedQueue(_this.opts.limit);
-    }
-
-    if (_this.opts.bundle && !_this.opts.formData) {
-      throw new Error('`opts.formData` must be true when `opts.bundle` is enabled.');
-    }
-
-    _this.uploaderEvents = Object.create(null);
-    return _this;
-  }
-
-  var _proto = XHRUpload.prototype;
-
-  _proto.setOptions = function setOptions(newOpts) {
-    _Plugin.prototype.setOptions.call(this, newOpts);
-
-    this.i18nInit();
-  };
-
-  _proto.i18nInit = function i18nInit() {
-    this.translator = new Translator([this.defaultLocale, this.uppy.locale, this.opts.locale]);
-    this.i18n = this.translator.translate.bind(this.translator);
-    this.setPluginState(); // so that UI re-renders and we see the updated locale
-  };
-
-  _proto.getOptions = function getOptions(file) {
-    var overrides = this.uppy.getState().xhrUpload;
-
-    var opts = _extends({}, this.opts, {}, overrides || {}, {}, file.xhrUpload || {}, {
-      headers: {}
-    });
-
-    _extends(opts.headers, this.opts.headers);
-
-    if (overrides) {
-      _extends(opts.headers, overrides.headers);
-    }
-
-    if (file.xhrUpload) {
-      _extends(opts.headers, file.xhrUpload.headers);
-    }
-
-    return opts;
-  };
-
-  _proto.addMetadata = function addMetadata(formData, meta, opts) {
-    var metaFields = Array.isArray(opts.metaFields) ? opts.metaFields // Send along all fields by default.
-    : Object.keys(meta);
-    metaFields.forEach(function (item) {
-      formData.append(item, meta[item]);
-    });
-  };
-
-  _proto.createFormDataUpload = function createFormDataUpload(file, opts) {
-    var formPost = new FormData();
-    this.addMetadata(formPost, file.meta, opts);
-    var dataWithUpdatedType = setTypeInBlob(file);
-
-    if (file.name) {
-      formPost.append(opts.fieldName, dataWithUpdatedType, file.meta.name);
-    } else {
-      formPost.append(opts.fieldName, dataWithUpdatedType);
-    }
-
-    return formPost;
-  };
-
-  _proto.createBundledUpload = function createBundledUpload(files, opts) {
-    var _this2 = this;
-
-    var formPost = new FormData();
-
-    var _this$uppy$getState = this.uppy.getState(),
-        meta = _this$uppy$getState.meta;
-
-    this.addMetadata(formPost, meta, opts);
-    files.forEach(function (file) {
-      var opts = _this2.getOptions(file);
-
-      var dataWithUpdatedType = setTypeInBlob(file);
-
-      if (file.name) {
-        formPost.append(opts.fieldName, dataWithUpdatedType, file.name);
-      } else {
-        formPost.append(opts.fieldName, dataWithUpdatedType);
-      }
-    });
-    return formPost;
-  };
-
-  _proto.createBareUpload = function createBareUpload(file, opts) {
-    return file.data;
-  };
-
-  _proto.upload = function upload(file, current, total) {
-    var _this3 = this;
-
-    var opts = this.getOptions(file);
-    this.uppy.log("uploading " + current + " of " + total);
-    return new Promise(function (resolve, reject) {
-      _this3.uppy.emit('upload-started', file);
-
-      var data = opts.formData ? _this3.createFormDataUpload(file, opts) : _this3.createBareUpload(file, opts);
-      var xhr = new XMLHttpRequest();
-      _this3.uploaderEvents[file.id] = new EventTracker(_this3.uppy);
-      var timer = new ProgressTimeout(opts.timeout, function () {
-        xhr.abort();
-        queuedRequest.done();
-        var error = new Error(_this3.i18n('timedOut', {
-          seconds: Math.ceil(opts.timeout / 1000)
-        }));
-
-        _this3.uppy.emit('upload-error', file, error);
-
-        reject(error);
-      });
-      var id = cuid();
-      xhr.upload.addEventListener('loadstart', function (ev) {
-        _this3.uppy.log("[XHRUpload] " + id + " started");
-      });
-      xhr.upload.addEventListener('progress', function (ev) {
-        _this3.uppy.log("[XHRUpload] " + id + " progress: " + ev.loaded + " / " + ev.total); // Begin checking for timeouts when progress starts, instead of loading,
-        // to avoid timing out requests on browser concurrency queue
-
-
-        timer.progress();
-
-        if (ev.lengthComputable) {
-          _this3.uppy.emit('upload-progress', file, {
-            uploader: _this3,
-            bytesUploaded: ev.loaded,
-            bytesTotal: ev.total
-          });
-        }
-      });
-      xhr.addEventListener('load', function (ev) {
-        _this3.uppy.log("[XHRUpload] " + id + " finished");
-
-        timer.done();
-        queuedRequest.done();
-
-        if (_this3.uploaderEvents[file.id]) {
-          _this3.uploaderEvents[file.id].remove();
-
-          _this3.uploaderEvents[file.id] = null;
-        }
-
-        if (opts.validateStatus(ev.target.status, xhr.responseText, xhr)) {
-          var body = opts.getResponseData(xhr.responseText, xhr);
-          var uploadURL = body[opts.responseUrlFieldName];
-          var uploadResp = {
-            status: ev.target.status,
-            body: body,
-            uploadURL: uploadURL
-          };
-
-          _this3.uppy.emit('upload-success', file, uploadResp);
-
-          if (uploadURL) {
-            _this3.uppy.log("Download " + file.name + " from " + uploadURL);
-          }
-
-          return resolve(file);
-        } else {
-          var _body = opts.getResponseData(xhr.responseText, xhr);
-
-          var error = buildResponseError(xhr, opts.getResponseError(xhr.responseText, xhr));
-          var response = {
-            status: ev.target.status,
-            body: _body
-          };
-
-          _this3.uppy.emit('upload-error', file, error, response);
-
-          return reject(error);
-        }
-      });
-      xhr.addEventListener('error', function (ev) {
-        _this3.uppy.log("[XHRUpload] " + id + " errored");
-
-        timer.done();
-        queuedRequest.done();
-
-        if (_this3.uploaderEvents[file.id]) {
-          _this3.uploaderEvents[file.id].remove();
-
-          _this3.uploaderEvents[file.id] = null;
-        }
-
-        var error = buildResponseError(xhr, opts.getResponseError(xhr.responseText, xhr));
-
-        _this3.uppy.emit('upload-error', file, error);
-
-        return reject(error);
-      });
-      xhr.open(opts.method.toUpperCase(), opts.endpoint, true); // IE10 does not allow setting `withCredentials` and `responseType`
-      // before `open()` is called.
-
-      xhr.withCredentials = opts.withCredentials;
-
-      if (opts.responseType !== '') {
-        xhr.responseType = opts.responseType;
-      }
-
-      Object.keys(opts.headers).forEach(function (header) {
-        xhr.setRequestHeader(header, opts.headers[header]);
-      });
-
-      var queuedRequest = _this3.requests.run(function () {
-        xhr.send(data);
-        return function () {
-          timer.done();
-          xhr.abort();
-        };
-      });
-
-      _this3.onFileRemove(file.id, function () {
-        queuedRequest.abort();
-        reject(new Error('File removed'));
-      });
-
-      _this3.onCancelAll(file.id, function () {
-        queuedRequest.abort();
-        reject(new Error('Upload cancelled'));
-      });
-    });
-  };
-
-  _proto.uploadRemote = function uploadRemote(file, current, total) {
-    var _this4 = this;
-
-    var opts = this.getOptions(file);
-    return new Promise(function (resolve, reject) {
-      _this4.uppy.emit('upload-started', file);
-
-      var fields = {};
-      var metaFields = Array.isArray(opts.metaFields) ? opts.metaFields // Send along all fields by default.
-      : Object.keys(file.meta);
-      metaFields.forEach(function (name) {
-        fields[name] = file.meta[name];
-      });
-      var Client = file.remote.providerOptions.provider ? Provider : RequestClient;
-      var client = new Client(_this4.uppy, file.remote.providerOptions);
-      client.post(file.remote.url, _extends({}, file.remote.body, {
-        endpoint: opts.endpoint,
-        size: file.data.size,
-        fieldname: opts.fieldName,
-        metadata: fields,
-        httpMethod: opts.method,
-        headers: opts.headers
-      })).then(function (res) {
-        var token = res.token;
-        var host = getSocketHost(file.remote.companionUrl);
-        var socket = new Socket({
-          target: host + "/api/" + token,
-          autoOpen: false
-        });
-        _this4.uploaderEvents[file.id] = new EventTracker(_this4.uppy);
-
-        _this4.onFileRemove(file.id, function () {
-          socket.send('pause', {});
-          queuedRequest.abort();
-          resolve("upload " + file.id + " was removed");
-        });
-
-        _this4.onCancelAll(file.id, function () {
-          socket.send('pause', {});
-          queuedRequest.abort();
-          resolve("upload " + file.id + " was canceled");
-        });
-
-        _this4.onRetry(file.id, function () {
-          socket.send('pause', {});
-          socket.send('resume', {});
-        });
-
-        _this4.onRetryAll(file.id, function () {
-          socket.send('pause', {});
-          socket.send('resume', {});
-        });
-
-        socket.on('progress', function (progressData) {
-          return emitSocketProgress(_this4, progressData, file);
-        });
-        socket.on('success', function (data) {
-          var body = opts.getResponseData(data.response.responseText, data.response);
-          var uploadURL = body[opts.responseUrlFieldName];
-          var uploadResp = {
-            status: data.response.status,
-            body: body,
-            uploadURL: uploadURL
-          };
-
-          _this4.uppy.emit('upload-success', file, uploadResp);
-
-          queuedRequest.done();
-
-          if (_this4.uploaderEvents[file.id]) {
-            _this4.uploaderEvents[file.id].remove();
-
-            _this4.uploaderEvents[file.id] = null;
-          }
-
-          return resolve();
-        });
-        socket.on('error', function (errData) {
-          var resp = errData.response;
-          var error = resp ? opts.getResponseError(resp.responseText, resp) : _extends(new Error(errData.error.message), {
-            cause: errData.error
-          });
-
-          _this4.uppy.emit('upload-error', file, error);
-
-          queuedRequest.done();
-
-          if (_this4.uploaderEvents[file.id]) {
-            _this4.uploaderEvents[file.id].remove();
-
-            _this4.uploaderEvents[file.id] = null;
-          }
-
-          reject(error);
-        });
-
-        var queuedRequest = _this4.requests.run(function () {
-          socket.open();
-
-          if (file.isPaused) {
-            socket.send('pause', {});
-          }
-
-          return function () {
-            return socket.close();
-          };
-        });
-      }).catch(function (err) {
-        _this4.uppy.emit('upload-error', file, err);
-
-        reject(err);
-      });
-    });
-  };
-
-  _proto.uploadBundle = function uploadBundle(files) {
-    var _this5 = this;
-
-    return new Promise(function (resolve, reject) {
-      var endpoint = _this5.opts.endpoint;
-      var method = _this5.opts.method;
-
-      var optsFromState = _this5.uppy.getState().xhrUpload;
-
-      var formData = _this5.createBundledUpload(files, _extends({}, _this5.opts, {}, optsFromState || {}));
-
-      var xhr = new XMLHttpRequest();
-      var timer = new ProgressTimeout(_this5.opts.timeout, function () {
-        xhr.abort();
-        var error = new Error(_this5.i18n('timedOut', {
-          seconds: Math.ceil(_this5.opts.timeout / 1000)
-        }));
-        emitError(error);
-        reject(error);
-      });
-
-      var emitError = function emitError(error) {
-        files.forEach(function (file) {
-          _this5.uppy.emit('upload-error', file, error);
-        });
-      };
-
-      xhr.upload.addEventListener('loadstart', function (ev) {
-        _this5.uppy.log('[XHRUpload] started uploading bundle');
-
-        timer.progress();
-      });
-      xhr.upload.addEventListener('progress', function (ev) {
-        timer.progress();
-        if (!ev.lengthComputable) return;
-        files.forEach(function (file) {
-          _this5.uppy.emit('upload-progress', file, {
-            uploader: _this5,
-            bytesUploaded: ev.loaded / ev.total * file.size,
-            bytesTotal: file.size
-          });
-        });
-      });
-      xhr.addEventListener('load', function (ev) {
-        timer.done();
-
-        if (_this5.opts.validateStatus(ev.target.status, xhr.responseText, xhr)) {
-          var body = _this5.opts.getResponseData(xhr.responseText, xhr);
-
-          var uploadResp = {
-            status: ev.target.status,
-            body: body
-          };
-          files.forEach(function (file) {
-            _this5.uppy.emit('upload-success', file, uploadResp);
-          });
-          return resolve();
-        }
-
-        var error = _this5.opts.getResponseError(xhr.responseText, xhr) || new Error('Upload error');
-        error.request = xhr;
-        emitError(error);
-        return reject(error);
-      });
-      xhr.addEventListener('error', function (ev) {
-        timer.done();
-        var error = _this5.opts.getResponseError(xhr.responseText, xhr) || new Error('Upload error');
-        emitError(error);
-        return reject(error);
-      });
-
-      _this5.uppy.on('cancel-all', function () {
-        timer.done();
-        xhr.abort();
-      });
-
-      xhr.open(method.toUpperCase(), endpoint, true); // IE10 does not allow setting `withCredentials` and `responseType`
-      // before `open()` is called.
-
-      xhr.withCredentials = _this5.opts.withCredentials;
-
-      if (_this5.opts.responseType !== '') {
-        xhr.responseType = _this5.opts.responseType;
-      }
-
-      Object.keys(_this5.opts.headers).forEach(function (header) {
-        xhr.setRequestHeader(header, _this5.opts.headers[header]);
-      });
-      xhr.send(formData);
-      files.forEach(function (file) {
-        _this5.uppy.emit('upload-started', file);
-      });
-    });
-  };
-
-  _proto.uploadFiles = function uploadFiles(files) {
-    var _this6 = this;
-
-    var promises = files.map(function (file, i) {
-      var current = parseInt(i, 10) + 1;
-      var total = files.length;
-
-      if (file.error) {
-        return Promise.reject(new Error(file.error));
-      } else if (file.isRemote) {
-        return _this6.uploadRemote(file, current, total);
-      } else {
-        return _this6.upload(file, current, total);
-      }
-    });
-    return settle(promises);
-  };
-
-  _proto.onFileRemove = function onFileRemove(fileID, cb) {
-    this.uploaderEvents[fileID].on('file-removed', function (file) {
-      if (fileID === file.id) cb(file.id);
-    });
-  };
-
-  _proto.onRetry = function onRetry(fileID, cb) {
-    this.uploaderEvents[fileID].on('upload-retry', function (targetFileID) {
-      if (fileID === targetFileID) {
-        cb();
-      }
-    });
-  };
-
-  _proto.onRetryAll = function onRetryAll(fileID, cb) {
-    var _this7 = this;
-
-    this.uploaderEvents[fileID].on('retry-all', function (filesToRetry) {
-      if (!_this7.uppy.getFile(fileID)) return;
-      cb();
-    });
-  };
-
-  _proto.onCancelAll = function onCancelAll(fileID, cb) {
-    var _this8 = this;
-
-    this.uploaderEvents[fileID].on('cancel-all', function () {
-      if (!_this8.uppy.getFile(fileID)) return;
-      cb();
-    });
-  };
-
-  _proto.handleUpload = function handleUpload(fileIDs) {
-    var _this9 = this;
-
-    if (fileIDs.length === 0) {
-      this.uppy.log('[XHRUpload] No files to upload!');
-      return Promise.resolve();
-    } // no limit configured by the user, and no RateLimitedQueue passed in by a "parent" plugin (basically just AwsS3) using the top secret `__queue` option
-
-
-    if (this.opts.limit === 0 && !this.opts.__queue) {
-      this.uppy.log('[XHRUpload] When uploading multiple files at once, consider setting the `limit` option (to `10` for example), to limit the number of concurrent uploads, which helps prevent memory and network issues: https://uppy.io/docs/xhr-upload/#limit-0', 'warning');
-    }
-
-    this.uppy.log('[XHRUpload] Uploading...');
-    var files = fileIDs.map(function (fileID) {
-      return _this9.uppy.getFile(fileID);
-    });
-
-    if (this.opts.bundle) {
-      // if bundle: true, we don’t support remote uploads
-      var isSomeFileRemote = files.some(function (file) {
-        return file.isRemote;
-      });
-
-      if (isSomeFileRemote) {
-        throw new Error('Can’t upload remote files when bundle: true option is set');
-      }
-
-      return this.uploadBundle(files);
-    }
-
-    return this.uploadFiles(files).then(function () {
-      return null;
-    });
-  };
-
-  _proto.install = function install() {
-    if (this.opts.bundle) {
-      var _this$uppy$getState2 = this.uppy.getState(),
-          capabilities = _this$uppy$getState2.capabilities;
-
-      this.uppy.setState({
-        capabilities: _extends({}, capabilities, {
-          individualCancellation: false
-        })
-      });
-    }
-
-    this.uppy.addUploader(this.handleUpload);
-  };
-
-  _proto.uninstall = function uninstall() {
-    if (this.opts.bundle) {
-      var _this$uppy$getState3 = this.uppy.getState(),
-          capabilities = _this$uppy$getState3.capabilities;
-
-      this.uppy.setState({
-        capabilities: _extends({}, capabilities, {
-          individualCancellation: true
-        })
-      });
-    }
-
-    this.uppy.removeUploader(this.handleUpload);
-  };
-
-  return XHRUpload;
-}(Plugin), _class.VERSION = "1.5.8", _temp);
-},{"@uppy/core":"../node_modules/@uppy/core/lib/index.js","cuid":"../node_modules/cuid/index.js","@uppy/utils/lib/Translator":"../node_modules/@uppy/utils/lib/Translator.js","@uppy/companion-client":"../node_modules/@uppy/companion-client/lib/index.js","@uppy/utils/lib/emitSocketProgress":"../node_modules/@uppy/utils/lib/emitSocketProgress.js","@uppy/utils/lib/getSocketHost":"../node_modules/@uppy/utils/lib/getSocketHost.js","@uppy/utils/lib/settle":"../node_modules/@uppy/utils/lib/settle.js","@uppy/utils/lib/EventTracker":"../node_modules/@uppy/utils/lib/EventTracker.js","@uppy/utils/lib/ProgressTimeout":"../node_modules/@uppy/utils/lib/ProgressTimeout.js","@uppy/utils/lib/RateLimitedQueue":"../node_modules/@uppy/utils/lib/RateLimitedQueue.js"}],"components/ImageUploader.js":[function(require,module,exports) {
+},{"./lib/Dashboard":"../node_modules/@uppy/react/lib/Dashboard.js","./lib/DashboardModal":"../node_modules/@uppy/react/lib/DashboardModal.js","./lib/DragDrop":"../node_modules/@uppy/react/lib/DragDrop.js","./lib/ProgressBar":"../node_modules/@uppy/react/lib/ProgressBar.js","./lib/StatusBar":"../node_modules/@uppy/react/lib/StatusBar.js"}],"components/ImageUploader.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42518,9 +45157,11 @@ var _react = _interopRequireDefault(require("react"));
 
 var _core = _interopRequireDefault(require("@uppy/core"));
 
-var _react2 = require("@uppy/react");
+var _tus = _interopRequireDefault(require("@uppy/tus"));
 
-var _xhrUpload = _interopRequireDefault(require("@uppy/xhr-upload"));
+var _url = _interopRequireDefault(require("@uppy/url"));
+
+var _react2 = require("@uppy/react");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -42533,32 +45174,30 @@ var uppy = (0, _core.default)({
   },
   autoProceed: true
 });
-uppy.use(_xhrUpload.default, {
-  endpoint: '/upload'
+uppy.use(_tus.default, {
+  endpoint: 'https://master.tus.io/files/'
 });
-uppy.on('complete', function (result) {
-  var url = result.successful[0].uploadURL;
-  console.log(url);
+uppy.use(_url.default, {
+  companionUrl: 'http://localhost:3005',
+  locale: {}
+});
+uppy.on('success', function (fileCount) {
+  console.log("".concat(fileCount, " files uploaded"));
 });
 
 var ImageUploader = function ImageUploader(currentImage) {
   return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
     src: currentImage,
     alt: "Current Image"
-  }), /*#__PURE__*/_react.default.createElement(_react2.DragDrop, {
+  }), /*#__PURE__*/_react.default.createElement(_react2.Dashboard, {
     uppy: uppy,
-    locale: {
-      strings: {
-        dropHereOr: 'Drop here or %{browse}',
-        browse: 'browse'
-      }
-    }
+    plugins: ['Url']
   }));
 };
 
 var _default = ImageUploader;
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","@uppy/core":"../node_modules/@uppy/core/lib/index.js","@uppy/react":"../node_modules/@uppy/react/index.mjs","@uppy/xhr-upload":"../node_modules/@uppy/xhr-upload/lib/index.js"}],"App.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@uppy/core":"../node_modules/@uppy/core/lib/index.js","@uppy/tus":"../node_modules/@uppy/tus/lib/index.js","@uppy/url":"../node_modules/@uppy/url/lib/index.js","@uppy/react":"../node_modules/@uppy/react/index.mjs"}],"App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42618,7 +45257,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58013" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
