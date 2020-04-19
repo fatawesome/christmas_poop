@@ -1,7 +1,8 @@
 import React from "react";
 import Uppy from "@uppy/core";
-import { DragDrop } from "@uppy/react";
-import XHRUpload from "@uppy/xhr-upload";
+import Tus from "@uppy/tus";
+import Url from "@uppy/url";
+import { Dashboard } from "@uppy/react";
 
 const uppy = Uppy({
     meta: { type: 'avatar' },
@@ -9,25 +10,20 @@ const uppy = Uppy({
     autoProceed: true,
 })
 
-uppy.use(XHRUpload, {endpoint: '/upload'})
+uppy.use(Tus, {endpoint: 'https://master.tus.io/files/'});
+uppy.use(Url, {companionUrl: 'http://localhost:3005', locale: {}});
 
-uppy.on('complete', (result) => {
-    const url = result.successful[0].uploadURL;
-    console.log(url);
+uppy.on('success', (fileCount) => {
+    console.log(`${fileCount} files uploaded`)
 })
 
 const ImageUploader = (currentImage) => {
     return (
         <div>
             <img src={currentImage} alt="Current Image" />
-            <DragDrop
+            <Dashboard
                 uppy={uppy}
-                locale={{
-                    strings: {
-                        dropHereOr: 'Drop here or %{browse}',
-                        browse: 'browse'
-                    }
-                }}
+                plugins={['Url']}
             />
         </div>
     )

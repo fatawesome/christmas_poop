@@ -21,3 +21,14 @@ services:
     ports:
       - "3004:3004"
     restart: always
+  uppy_backend:
+    build: ./uppy/backend
+    ports:
+      - "3005:3005"
+    restart: always
+  uppy_frontend:
+    build: ./uppy/frontend
+    ports:
+      - "3006:3006"
+    restart: always
+
