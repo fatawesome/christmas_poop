@@ -21,3 +21,8 @@ services:
     ports:
       - "3004:3004"
     restart: always
+  heartbleed:
+    build: ./heartbleed/
+    ports:
+      - "3005:443"
+    restart: always
