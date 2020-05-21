@@ -164,6 +164,14 @@ Instructions on how to run them are bundled with this report in a form of a
 
 6.  NPM Programatic
 
+    This vulnerability arises from incorrect validation of inputs to an npm
+    package.  This package basically executes `npm install <user input>`, and we
+    obviously can provide something with `;` as user input, and then execute
+    arbitrary shell code.
+
+    Fixing that included surrounding the user input with quotes, and escaping
+    all quotes inside it.
+
 ## Difficulties faced
 
 Researching vulnerabilities specifically in the source code was not something
