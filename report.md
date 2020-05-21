@@ -84,6 +84,25 @@ Instructions on how to run them are bundled with this report in a form of a
     supplied string is actually of the length that the client had sent.
 
 2.  Lodas
+    
+    Prototype Pollution refers to the ability to inject properties into
+    existing JavaScript language construct prototypes, such as Objects. 
+    When that happens, this leads to either denial of service by triggering 
+    JavaScript exceptions, or it tampers with the application source code to force the 
+    code path that the attacker injects, thereby leading to remote code execution.
+    There are two main ways in which the pollution of prototypes occurs:
+    * Unsafe Object recursive merge
+    * Property definition by path
+    
+    A general way to exploit vulnerable `lodash.merge({}, data)` is to
+    pass data, which contains `__proto__` field. 
+    
+    The implemented fix for this issue is just catching the edge cases:
+    ```
+    if (key == '__proto__') {
+        return;
+    }
+    ``` 
 
 3.  Shellshock
 
@@ -116,6 +135,32 @@ Instructions on how to run them are bundled with this report in a form of a
     Fixing that included a basic `if` on this statement.
 
 5.  Uppy
+    
+    Server Side Request Forgery allows hacker to extract inside information 
+    from the server or to take control of internal services.
+     
+    Usually SSRF is exploited by finding some functionality which can make 
+    requests from the servers name, then finding some way (usually, API) to 
+    use this functionality and passing some malicious parameters to it (links, usually).     
+
+    Fixing this vulnerability includes checking given URL against black-listed URLs and IPs:
+    ```
+    const validateURL = (url, debug) => {
+      const validURLOpts = {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+        require_tld: !debug
+      }
+      if (!validator.isURL(url, validURLOpts)) {
+        return false
+      }
+    
+      return true
+    }
+    ```
+    ```
+    agentClass: getProtectedHttpAgent(utils.parseURL(url).protocol, blockLocalIPs)
+    ```
 
 6.  NPM Programatic
 
